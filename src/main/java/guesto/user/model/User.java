@@ -1,11 +1,13 @@
 package guesto.user.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "app_user")
+@Introspected
+@Serdeable
 public class User {
 
     @Id
@@ -14,19 +16,18 @@ public class User {
 
     private String username;
     private String password;
-
-    // Other fields like email, roles, etc., can be added as needed
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User() {
-        // Default constructor for JPA
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -49,5 +50,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

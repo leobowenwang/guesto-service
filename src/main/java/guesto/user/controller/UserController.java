@@ -1,6 +1,7 @@
 package guesto.user.controller;
 
 import guesto.user.dto.LoginDTO;
+import guesto.user.dto.LoginResponseDTO;
 import guesto.user.dto.RegisterDTO;
 import guesto.user.service.UserService;
 import io.micronaut.http.HttpResponse;
@@ -17,12 +18,12 @@ import jakarta.inject.Inject;
 import java.util.Collections;
 
 @Controller("/user")
+@Secured(SecurityRule.IS_ANONYMOUS)
 public class UserController {
 
     @Inject
     private UserService userService;
 
-    @Secured(SecurityRule.IS_ANONYMOUS)
     @Get(uri = "/", produces = "text/plain")
     public String index() {
         return "Example Response";
@@ -31,9 +32,9 @@ public class UserController {
     @Post("/login")
     public HttpResponse<?> login(@Body LoginDTO loginDTO) {
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginDTO.getUsername(), loginDTO.getPassword());
-        return userService.login(credentials).map(token -> HttpResponse.ok(AuthenticationResponse.success(loginDTO.getUsername(), Collections.singleton(token)))).orElseGet(HttpResponse::unauthorized);
+        return userService.login(credentials).map(token -> HttpResponse.ok(new LoginResponseDTO(loginDTO.getUsername(), token))).orElseGet(HttpResponse::unauthorized);
     }
-    @Secured(SecurityRule.IS_ANONYMOUS)
+
     @Post("/register")
     public HttpResponse<?> register(@Body RegisterDTO registerDTO) {
         return userService.register(registerDTO).map(HttpResponse::created).orElseGet(HttpResponse::badRequest);

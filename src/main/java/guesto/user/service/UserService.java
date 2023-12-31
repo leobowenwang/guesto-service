@@ -1,6 +1,8 @@
 package guesto.user.service;
 
 import guesto.user.dto.RegisterDTO;
+import guesto.user.exception.UsernameAlreadyExistsException;
+import guesto.user.model.Role;
 import guesto.user.model.User;
 import guesto.user.repository.UserRepository;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
@@ -16,11 +18,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtTokenGenerator jwtGenerator;
+    private final JwtTokenGenerator jwtTokenGenerator;
 
-    public UserService(UserRepository userRepository, JwtTokenGenerator jwtGenerator) {
+    public UserService(UserRepository userRepository, JwtTokenGenerator jwtTokenGenerator) {
         this.userRepository = userRepository;
-        this.jwtGenerator = jwtGenerator;
+        this.jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public Optional<String> login(UsernamePasswordCredentials credentials) {
@@ -28,18 +30,18 @@ public class UserService {
             Map<String, Object> claims = new HashMap<>();
             claims.put("sub", user.getUsername());
 
-            Optional<String> token = jwtGenerator.generateToken(claims);
+            Optional<String> token = jwtTokenGenerator.generateToken(claims);
             return token.orElse(null);
         });
     }
 
     public Optional<User> register(RegisterDTO registerDTO) {
         if (userRepository.findByUsername(registerDTO.getUsername()).isPresent()) {
-            return Optional.empty();
+            throw new UsernameAlreadyExistsException(registerDTO.getUsername());
         }
 
         String hashedPassword = BCrypt.hashpw(registerDTO.getPassword(), BCrypt.gensalt());
-        User newUser = new User(registerDTO.getUsername(), hashedPassword);
+        User newUser = new User(registerDTO.getUsername(), hashedPassword, registerDTO.getRole());
         userRepository.save(newUser);
 
         return Optional.of(newUser);

@@ -6,13 +6,21 @@ import io.micronaut.serde.annotation.Serdeable;
 @Introspected
 @Serdeable
 public class LoginResponseDTO {
+    private String username;
     private String token;
 
-    public LoginResponseDTO() {
+    public LoginResponseDTO(String username, String token) {
+        this.username = username;
+        this.token = token;
     }
 
-    public LoginResponseDTO(String token) {
-        this.token = token;
+    // Getters and setters
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getToken() {
