@@ -11,6 +11,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.data/micronaut-data-processor/4.3.1/270334b7f8d93467cc7a9b996c00f959c0fabbd8/micronaut-data-processor-4.3.1.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.openapi/micronaut-openapi/6.1.0/922769605ba90fa51cdfdede1739b494c9133e5d/micronaut-openapi-6.1.0.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.security/micronaut-security-annotations/4.4.0/2e68db8408d700788b0b38295b9f337fb90d1f73/micronaut-security-annotations-4.4.0.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.serde/micronaut-serde-processor/2.4.0/184e8514fa4240d969301503adbc472a29248b87/micronaut-serde-processor-2.4.0.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.data/micronaut-data-model/4.3.1/fa4ac59d85ea2acbf572e4329d056ea3f705d81d/micronaut-data-model-4.3.1.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.openapi/micronaut-openapi-annotations/6.1.0/430f6e85c79edb9aba127cd6efb0b60554043e60/micronaut-openapi-annotations-6.1.0.jar" />
@@ -87,6 +88,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.data/micronaut-data-processor/4.3.1/270334b7f8d93467cc7a9b996c00f959c0fabbd8/micronaut-data-processor-4.3.1.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.openapi/micronaut-openapi/6.1.0/922769605ba90fa51cdfdede1739b494c9133e5d/micronaut-openapi-6.1.0.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.security/micronaut-security-annotations/4.4.0/2e68db8408d700788b0b38295b9f337fb90d1f73/micronaut-security-annotations-4.4.0.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.serde/micronaut-serde-processor/2.4.0/184e8514fa4240d969301503adbc472a29248b87/micronaut-serde-processor-2.4.0.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.data/micronaut-data-model/4.3.1/fa4ac59d85ea2acbf572e4329d056ea3f705d81d/micronaut-data-model-4.3.1.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.openapi/micronaut-openapi-annotations/6.1.0/430f6e85c79edb9aba127cd6efb0b60554043e60/micronaut-openapi-annotations-6.1.0.jar" />
