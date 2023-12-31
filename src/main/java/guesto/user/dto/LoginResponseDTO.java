@@ -14,7 +14,6 @@ public class LoginResponseDTO {
         this.token = token;
     }
 
-    // Getters and setters
     public String getUsername() {
         return username;
     }
