@@ -1,18 +1,13 @@
 package guesto.event.service;
 
 import guesto.event.dto.EventDTO;
-import guesto.event.dto.GuestListDTO;
 import guesto.event.model.Event;
 import guesto.event.model.Guest;
 import guesto.event.repository.EventRepository;
-import guesto.user.model.Role;
-import guesto.user.model.User;
-import guesto.user.service.UserService;
 import io.micronaut.security.authentication.Authentication;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.net.Authenticator;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

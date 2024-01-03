@@ -2,10 +2,8 @@ package guesto.user.service;
 
 import guesto.user.dto.RegisterDTO;
 import guesto.user.exception.UsernameAlreadyExistsException;
-import guesto.user.model.Role;
 import guesto.user.model.User;
 import guesto.user.repository.UserRepository;
-import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import jakarta.inject.Singleton;

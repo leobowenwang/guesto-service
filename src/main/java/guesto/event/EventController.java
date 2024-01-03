@@ -12,7 +12,6 @@ import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller("/event")
 @Secured(SecurityRule.IS_AUTHENTICATED)
