@@ -52,6 +52,11 @@ micronaut {
 jar {
     archiveBaseName = 'guesto'
     version = '1.0.0'
+    manifest {
+        attributes(
+                'Main-Class': 'guesto.Application'
+        )
+    }
 }
 
 
