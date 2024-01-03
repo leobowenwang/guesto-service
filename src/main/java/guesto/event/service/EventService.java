@@ -24,6 +24,7 @@ public class EventService {
     }
 
     public Event createEvent(EventDTO eventDTO) {
+
         Event event = new Event();
         event.setName(eventDTO.getName());
         event.setDate(eventDTO.getEventDate());
@@ -38,12 +39,7 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public EventDTO updateEvent(Long id, EventDTO eventDTO, String username) {
-        User user = userService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!user.getRole().equals(Role.ADMIN)) {
-            throw new RuntimeException("Unauthorized: Only admins can update events");
-        }
+    public EventDTO updateEvent(Long id, EventDTO eventDTO) {
 
         return eventRepository.findById(id)
                 .map(existingEvent -> {

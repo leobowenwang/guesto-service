@@ -12,7 +12,7 @@ import jakarta.inject.Inject;
 
 import java.util.List;
 
-@Controller("/events")
+@Controller("/event")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 public class EventController {
 
@@ -24,9 +24,10 @@ public class EventController {
     }
 
     @Post
+    @Secured("ADMIN")
     public HttpResponse<Event> createEvent(@Body EventDTO eventDTO) {
         Event createdEvent = eventService.createEvent(eventDTO);
-        return HttpResponse.created(createdEvent);
+        return HttpResponse.ok(createdEvent);
     }
 
     @Get
@@ -35,19 +36,16 @@ public class EventController {
     }
 
     @Put("/{id}")
-    public HttpResponse<EventDTO> updateEvent(@PathVariable Long id, @Body EventDTO eventDTO, Authentication authentication) {
-        String username = authentication.getName();
-        try {
-            EventDTO updatedEventDTO = eventService.updateEvent(id, eventDTO, username);
-            return HttpResponse.ok(updatedEventDTO);
-        } catch (RuntimeException e) {
-            return HttpResponse.unauthorized();
-        }
+    @Secured("ADMIN")
+    public HttpResponse<EventDTO> updateEvent(@PathVariable Long id, @Body EventDTO eventDTO) {
+        EventDTO updatedEventDTO = eventService.updateEvent(id, eventDTO);
+        return HttpResponse.ok(updatedEventDTO);
     }
 
 
     @Delete("/{id}")
-    public HttpResponse<?> deleteEvent(@PathVariable Long id) {
+    @Secured("ADMIN")
+    public HttpResponse<?> deleteEvent(@PathVariable Long id, Authentication authentication) {
         eventService.deleteEvent(id);
         return HttpResponse.noContent();
     }

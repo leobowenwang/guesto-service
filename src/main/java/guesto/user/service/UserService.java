@@ -5,11 +5,13 @@ import guesto.user.exception.UsernameAlreadyExistsException;
 import guesto.user.model.Role;
 import guesto.user.model.User;
 import guesto.user.repository.UserRepository;
+import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import jakarta.inject.Singleton;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +31,7 @@ public class UserService {
         return userRepository.findByUsername(credentials.getUsername()).filter(user -> BCrypt.checkpw(credentials.getPassword(), user.getPassword())).map(user -> {
             Map<String, Object> claims = new HashMap<>();
             claims.put("sub", user.getUsername());
+            claims.put("roles", Collections.singletonList(user.getRole().name()));
 
             Optional<String> token = jwtTokenGenerator.generateToken(claims);
             return token.orElse(null);

@@ -1,11 +1,15 @@
 package guesto.event.model;
 
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Entity
+@Introspected
+@Serdeable
 public class Event {
 
     @Id
