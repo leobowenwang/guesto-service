@@ -1,4 +1,4 @@
-package guesto.user.controller;
+package guesto.user;
 
 import guesto.user.dto.LoginDTO;
 import guesto.user.dto.LoginResponseDTO;
