@@ -58,4 +58,4 @@ jobs:
           app-name: 'guesto'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_034D3F06DA914D8BA842B6248C49CAB3 }}
-          package: '*.jar'
+          package: 'guesto-1.0.0.jar'
