@@ -9,12 +9,12 @@ import io.micronaut.serde.annotation.Serdeable;
 public class RegisterDTO {
     private String username;
     private String password;
-    private Role role;
+    private String role;
 
     public RegisterDTO() {
     }
 
-    public RegisterDTO(String username, String password, Role role) {
+    public RegisterDTO(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -36,11 +36,11 @@ public class RegisterDTO {
         this.password = password;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }

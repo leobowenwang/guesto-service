@@ -48,8 +48,4 @@ public class UserService {
         return Optional.of(newUser);
     }
 
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
 }

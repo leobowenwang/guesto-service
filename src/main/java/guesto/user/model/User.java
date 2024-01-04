@@ -16,13 +16,12 @@ public class User {
 
     private String username;
     private String password;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
 
     public User() {
     }
 
-    public User(String username, String password, Role role) {
+    public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -52,11 +51,11 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }
