@@ -29,7 +29,7 @@ public class UserService {
         return userRepository.findByUsername(credentials.getUsername()).filter(user -> BCrypt.checkpw(credentials.getPassword(), user.getPassword())).map(user -> {
             Map<String, Object> claims = new HashMap<>();
             claims.put("sub", user.getUsername());
-            claims.put("roles", Collections.singletonList(user.getRole().name()));
+            claims.put("roles", Collections.singletonList(user.getRole()));
 
             Optional<String> token = jwtTokenGenerator.generateToken(claims);
             return token.orElse(null);
