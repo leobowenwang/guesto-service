@@ -16,6 +16,7 @@ dependencies {
     annotationProcessor("io.micronaut.openapi:micronaut-openapi")
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.swagger.core.v3:swagger-annotations")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
     implementation("io.micronaut.security:micronaut-security-jwt")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
@@ -33,6 +34,7 @@ dependencies {
 application {
     mainClass.set("guesto.Application")
 }
+
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
@@ -49,15 +51,11 @@ micronaut {
     }
 }
 
-jar {
-    archiveBaseName = 'guesto'
-    version = '1.0.0'
-    manifest {
-        attributes(
-                'Main-Class': 'guesto.Application'
-        )
-    }
+tasks.withType(JavaCompile) {
+    options.fork = true
+    options.forkOptions.jvmArgs << '-Dmicronaut.openapi.views.spec=rapidoc.enabled=true,openapi-explorer.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop'
 }
 
-
-
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
