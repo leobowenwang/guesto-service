@@ -53,7 +53,7 @@ micronaut {
 
 tasks.withType(JavaCompile) {
     options.fork = true
-    options.forkOptions.jvmArgs << '-Dmicronaut.openapi.views.spec=rapidoc.enabled=true,openapi-explorer.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop'
+    options.forkOptions.jvmArgs << '-Dmicronaut.openapi.views.spec=rapidoc.enabled=false,openapi-explorer.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop'
 }
 
 jar {

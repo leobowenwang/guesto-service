@@ -5,9 +5,9 @@ micronaut:
     port: 8080
   router:
     static-resources:
-      rapidoc:
-        paths: 'classpath:META-INF/rapidoc'
-        mapping: '/rapidoc/**'
+      swaggerui:
+        paths: 'classpath:META-INF/swagger/views/swagger-ui'
+        mapping: '/swagger-ui/**'
       swaggerSpec:
         paths: 'classpath:META-INF/swagger'
         mapping: '/swagger/**'
@@ -20,7 +20,7 @@ micronaut:
   security:
     enabled: true
     intercept-url-map:
-      - pattern: '/rapidoc/**'
+      - pattern: '/swagger-ui/**'
         http-method: GET
         access:
           - isAnonymous()
