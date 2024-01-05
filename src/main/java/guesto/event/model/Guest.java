@@ -8,7 +8,6 @@ public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String firstName;
     private String lastName;
     private boolean isCheckedIn;
@@ -22,8 +21,7 @@ public class Guest {
     public Guest() {
     }
 
-    public Guest(Long id, String firstName, String lastName, boolean isCheckedIn, GuestList guestList, int additionalGuests) {
-        this.id = id;
+    public Guest(String firstName, String lastName, boolean isCheckedIn, GuestList guestList, int additionalGuests) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isCheckedIn = isCheckedIn;

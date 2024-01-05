@@ -9,27 +9,16 @@ import java.util.List;
 @Introspected
 public class GuestDTO {
     private List<GuestDTO> guests;
-    private Long id;
     private String firstName;
     private String lastName;
     private boolean isCheckedIn;
     private int additionalGuests;
 
-    public GuestDTO(Long id, String firstName, String lastName, boolean isCheckedIn, int additionalGuests) {
-        this.id = id;
+    public GuestDTO(String firstName, String lastName, boolean isCheckedIn, int additionalGuests) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isCheckedIn = isCheckedIn;
         this.additionalGuests = additionalGuests;
-    }
-
-    public Long id() {
-        return id;
-    }
-
-    public GuestDTO setId(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String firstName() {

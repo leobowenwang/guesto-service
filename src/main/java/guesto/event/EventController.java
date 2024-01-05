@@ -3,8 +3,8 @@ package guesto.event;
 import guesto.event.dto.EventDTO;
 import guesto.event.dto.GuestDTO;
 import guesto.event.model.Event;
-import guesto.event.model.Guest;
 import guesto.event.service.EventService;
+import guesto.event.service.GuestService;
 import guesto.user.model.Role;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
@@ -23,10 +23,12 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+    private final GuestService guestService;
 
     @Inject
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, GuestService guestService) {
         this.eventService = eventService;
+        this.guestService = guestService;
     }
 
     @Post
@@ -61,8 +63,8 @@ public class EventController {
 
     @Put("/{id}/checkin")
     @Operation(summary = "Check In Guest", description = "Checks in a guest for the event with the specified ID.")
-    public HttpResponse<?> checkInGuest(@PathVariable Long id, @Body String guestName, Authentication authentication) {
-        boolean success = eventService.checkInGuest(id, guestName);
+    public HttpResponse<?> checkInGuest(@PathVariable Long id, @Body Long guestId, Authentication authentication) {
+        boolean success = guestService.checkInGuest(id, guestId);
         if (success) {
             return HttpResponse.ok("Guest checked in successfully.");
         } else {
@@ -70,13 +72,39 @@ public class EventController {
         }
     }
 
+    @Get("/{eventId}/guests")
+    @Operation(summary = "List All Guests", description = "Lists all guests for the specified event.")
+    public HttpResponse<List<GuestDTO>> listAllGuests(@PathVariable Long eventId) {
+        List<GuestDTO> guests = guestService.listAllGuests(eventId);
+        return HttpResponse.ok(guests);
+    }
+
 
     @Post("/{eventId}/add-guest")
     @Secured(Role.ADMIN)
     @Operation(summary = "Add Guest to Event", description = "Adds a guest to the specified event's guest list.")
     public HttpResponse<GuestDTO> addGuestToEvent(@PathVariable Long eventId, @Body GuestDTO guestDTO) {
-        GuestDTO addedGuestDTO = eventService.addGuestToEvent(eventId, guestDTO);
+        GuestDTO addedGuestDTO = guestService.addGuestToEvent(eventId, guestDTO);
         return HttpResponse.ok(addedGuestDTO);
     }
 
+    @Put("/{eventId}/guests/{guestId}")
+    @Secured(Role.ADMIN)
+    @Operation(summary = "Update Guest in Event", description = "Updates a guest in the specified event's guest list.")
+    public HttpResponse<GuestDTO> updateGuestInEvent(@PathVariable Long eventId, @PathVariable Long guestId, @Body GuestDTO updatedGuestDTO) {
+        GuestDTO updatedGuest = guestService.updateGuestInEvent(eventId, guestId, updatedGuestDTO);
+        return HttpResponse.ok(updatedGuest);
+    }
+
+    @Delete("/{eventId}/guests/{guestId}")
+    @Secured(Role.ADMIN)
+    @Operation(summary = "Delete Guest from Event", description = "Deletes a guest from the specified event's guest list.")
+    public HttpResponse<?> deleteGuestFromEvent(@PathVariable Long eventId, @PathVariable Long guestId) {
+        boolean removed = guestService.deleteGuestFromEvent(eventId, guestId);
+        if (removed) {
+            return HttpResponse.noContent();
+        } else {
+            return HttpResponse.badRequest("Unable to delete guest.");
+        }
+    }
 }
