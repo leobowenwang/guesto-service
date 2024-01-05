@@ -1,6 +1,7 @@
 package guesto.user.service;
 
 import guesto.user.dto.RegisterDTO;
+import guesto.user.dto.UserDTO;
 import guesto.user.exception.UsernameAlreadyExistsException;
 import guesto.user.model.User;
 import guesto.user.repository.UserRepository;
@@ -9,10 +10,8 @@ import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import jakarta.inject.Singleton;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class UserService {
@@ -46,6 +45,17 @@ public class UserService {
         userRepository.save(newUser);
 
         return Optional.of(newUser);
+    }
+
+    public boolean deleteUser(Long userId) {
+        return userRepository.findById(userId).map(user -> {
+            userRepository.delete(user);
+            return true;
+        }).orElse(false);
+    }
+
+    public List<UserDTO> listAllUsers() {
+        return userRepository.findAll().stream().map(UserDTO::fromEntity).collect(Collectors.toList());
     }
 
 }

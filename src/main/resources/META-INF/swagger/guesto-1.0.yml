@@ -4,9 +4,18 @@ info:
   version: "1.0"
 security:
 - bearerAuth: []
+tags:
+- name: Events
+  description: Operations related to events management
+- name: Users
+  description: User authentication and management
 paths:
   /event:
     get:
+      tags:
+      - Events
+      summary: List Events
+      description: Retrieves a list of all events.
       operationId: listEvents
       responses:
         "200":
@@ -17,9 +26,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-      security:
-      - bearerAuth: []
     post:
+      tags:
+      - Events
+      summary: Create Event
+      description: Creates a new event with the given details.
       operationId: createEvent
       requestBody:
         content:
@@ -34,10 +45,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Event'
-      security:
-      - bearerAuth: []
   /event/{id}:
     put:
+      tags:
+      - Events
+      summary: Update Event
+      description: Updates the event with the specified ID.
       operationId: updateEvent
       parameters:
       - name: id
@@ -59,9 +72,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EventDTO'
-      security:
-      - bearerAuth: []
     delete:
+      tags:
+      - Events
+      summary: Delete Event
+      description: Deletes the event with the specified ID.
       operationId: deleteEvent
       parameters:
       - name: id
@@ -77,10 +92,12 @@ paths:
             application/json:
               schema:
                 type: object
-      security:
-      - bearerAuth: []
   /event/{id}/checkin:
     put:
+      tags:
+      - Events
+      summary: Check In Guest
+      description: Checks in a guest for the event with the specified ID.
       operationId: checkInGuest
       parameters:
       - name: id
@@ -102,10 +119,10 @@ paths:
             application/json:
               schema:
                 type: object
-      security:
-      - bearerAuth: []
   /user:
     get:
+      tags:
+      - Users
       operationId: index
       responses:
         "200":
@@ -116,6 +133,10 @@ paths:
                 type: string
   /user/login:
     post:
+      tags:
+      - Users
+      summary: User Login
+      description: Authenticates a user with the provided credentials.
       operationId: login
       requestBody:
         content:
@@ -132,6 +153,10 @@ paths:
                 type: object
   /user/register:
     post:
+      tags:
+      - Users
+      summary: User Registration
+      description: Registers a new user with the provided details.
       operationId: register
       requestBody:
         content:

@@ -3,18 +3,19 @@ package guesto.user;
 import guesto.user.dto.LoginDTO;
 import guesto.user.dto.LoginResponseDTO;
 import guesto.user.dto.RegisterDTO;
+import guesto.user.dto.UserDTO;
+import guesto.user.model.Role;
 import guesto.user.service.UserService;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.rules.SecurityRule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
+
+import java.util.List;
 
 @Controller("/user")
 @Secured(SecurityRule.IS_ANONYMOUS)
@@ -24,9 +25,12 @@ public class UserController {
     @Inject
     private UserService userService;
 
-    @Get(uri = "/", produces = "text/plain")
-    public String index() {
-        return "Example Response";
+    @Get("/list")
+    @Secured(Role.ADMIN) // Assuming only admin users should access this
+    @Operation(summary = "List All Users", description = "Lists all registered users.")
+    public HttpResponse<List<UserDTO>> listUsers() {
+        List<UserDTO> users = userService.listAllUsers();
+        return HttpResponse.ok(users);
     }
 
     @Post("/login")
@@ -42,4 +46,15 @@ public class UserController {
         return userService.register(registerDTO).map(HttpResponse::created).orElseGet(HttpResponse::badRequest);
     }
 
+    @Delete("/{userId}")
+    @Secured("ADMIN")
+    @Operation(summary = "Delete User", description = "Deletes a user with the specified ID.")
+    public HttpResponse<?> deleteUser(Long userId) {
+        boolean success = userService.deleteUser(userId);
+        if (success) {
+            return HttpResponse.noContent();
+        } else {
+            return HttpResponse.notFound();
+        }
+    }
 }
