@@ -2,6 +2,8 @@ openapi: 3.0.1
 info:
   title: guesto
   version: "1.0"
+security:
+- bearerAuth: []
 paths:
   /event:
     get:
@@ -15,6 +17,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
+      security:
+      - bearerAuth: []
     post:
       operationId: createEvent
       requestBody:
@@ -30,6 +34,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Event'
+      security:
+      - bearerAuth: []
   /event/{id}:
     put:
       operationId: updateEvent
@@ -53,6 +59,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EventDTO'
+      security:
+      - bearerAuth: []
     delete:
       operationId: deleteEvent
       parameters:
@@ -69,6 +77,8 @@ paths:
             application/json:
               schema:
                 type: object
+      security:
+      - bearerAuth: []
   /event/{id}/checkin:
     put:
       operationId: checkInGuest
@@ -92,6 +102,8 @@ paths:
             application/json:
               schema:
                 type: object
+      security:
+      - bearerAuth: []
   /user:
     get:
       operationId: index
@@ -269,3 +281,8 @@ components:
           type: string
         role:
           type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
