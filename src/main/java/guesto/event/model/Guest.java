@@ -13,6 +13,8 @@ public class Guest {
     private String lastName;
     private boolean isCheckedIn;
 
+    private int additionalGuests;
+
     @ManyToOne
     @JoinColumn(name = "guest_list_id")
     private GuestList guestList;
@@ -20,12 +22,13 @@ public class Guest {
     public Guest() {
     }
 
-    public Guest(Long id, String firstName, String lastName, boolean isCheckedIn, GuestList guestList) {
+    public Guest(Long id, String firstName, String lastName, boolean isCheckedIn, GuestList guestList, int additionalGuests) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.isCheckedIn = isCheckedIn;
         this.guestList = guestList;
+        this.additionalGuests = additionalGuests;
     }
 
     public Long getId() {
@@ -58,6 +61,14 @@ public class Guest {
 
     public void setCheckedIn(boolean checkedIn) {
         isCheckedIn = checkedIn;
+    }
+
+    public int getAdditionalGuests() {
+        return additionalGuests;
+    }
+
+    public void setAdditionalGuests(int additionalGuests) {
+        this.additionalGuests = additionalGuests;
     }
 
     public GuestList getGuestList() {

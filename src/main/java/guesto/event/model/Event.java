@@ -25,7 +25,6 @@ public class Event {
     private int checkedInGuestsCount;
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
     private GuestList guestList;
-
     public Event() {
     }
 
@@ -122,4 +121,5 @@ public class Event {
     public void setGuestList(GuestList guestList) {
         this.guestList = guestList;
     }
+
 }

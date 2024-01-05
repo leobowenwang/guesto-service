@@ -11,7 +11,7 @@ public class GuestList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "event_id")
     private Event event;
 
@@ -19,6 +19,10 @@ public class GuestList {
     private List<Guest> guests;
 
     public GuestList() {
+    }
+
+    public GuestList(Event event) {
+        this.event = event;
     }
 
     public GuestList(Long id, Event event, List<Guest> guests) {

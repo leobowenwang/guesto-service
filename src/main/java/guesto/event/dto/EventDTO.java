@@ -20,6 +20,10 @@ public class EventDTO {
     public EventDTO() {
     }
 
+    public EventDTO(String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location) {
+        this(eventName, eventTime, maxGuestList, price, location, null);
+    }
+
     public EventDTO(String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location, GuestListDTO guestList) {
         this.eventName = eventName;
         this.eventTime = eventTime;

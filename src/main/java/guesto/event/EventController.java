@@ -1,7 +1,9 @@
 package guesto.event;
 
 import guesto.event.dto.EventDTO;
+import guesto.event.dto.GuestDTO;
 import guesto.event.model.Event;
+import guesto.event.model.Guest;
 import guesto.event.service.EventService;
 import guesto.user.model.Role;
 import io.micronaut.http.HttpResponse;
@@ -67,4 +69,14 @@ public class EventController {
             return HttpResponse.badRequest("Unable to check in guest.");
         }
     }
+
+
+    @Post("/{eventId}/add-guest")
+    @Secured(Role.ADMIN)
+    @Operation(summary = "Add Guest to Event", description = "Adds a guest to the specified event's guest list.")
+    public HttpResponse<GuestDTO> addGuestToEvent(@PathVariable Long eventId, @Body GuestDTO guestDTO) {
+        GuestDTO addedGuestDTO = eventService.addGuestToEvent(eventId, guestDTO);
+        return HttpResponse.ok(addedGuestDTO);
+    }
+
 }

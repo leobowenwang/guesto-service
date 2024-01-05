@@ -3,9 +3,12 @@ package guesto.event.dto;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
+import java.util.List;
+
 @Serdeable
 @Introspected
 public class GuestDTO {
+    private List<GuestDTO> guests;
     private Long id;
     private String firstName;
     private String lastName;
@@ -63,6 +66,14 @@ public class GuestDTO {
     public GuestDTO setAdditionalGuests(int additionalGuests) {
         this.additionalGuests = additionalGuests;
         return this;
+    }
+
+    public List<GuestDTO> getGuests() {
+        return guests;
+    }
+
+    public void setGuests(List<GuestDTO> guests) {
+        this.guests = guests;
     }
 
 }
