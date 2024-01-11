@@ -10,12 +10,13 @@ import java.util.List;
 public class GuestListDTO {
     private Long id;
     private Long eventId;
-    private List<GuestDTO> guests;
 
-    public GuestListDTO(Long id, Long eventId, List<GuestDTO> guests) {
+    private List<GuestDTO> guestList;
+
+    public GuestListDTO(Long id, Long eventId, List<GuestDTO> guestList) {
         this.id = id;
         this.eventId = eventId;
-        this.guests = guests;
+        this.guestList = guestList;
     }
 
     public Long id() {
@@ -36,14 +37,12 @@ public class GuestListDTO {
         return this;
     }
 
-    public List<GuestDTO> guests() {
-        return guests;
-    }
-
-    public GuestListDTO setGuests(List<GuestDTO> guests) {
-        this.guests = guests;
+    public GuestListDTO setGuestList(List<GuestDTO> guestList) {
+        this.guestList = guestList;
         return this;
     }
-
+    public List<GuestDTO> getGuestList() {
+        return guestList;
+    }
 
 }

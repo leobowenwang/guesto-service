@@ -26,7 +26,7 @@ public class GuestService {
     public boolean checkInGuest(Long eventId, Long guestId) {
         return eventRepository.findById(eventId)
                 .map(event -> {
-                    Optional<Guest> guestToCheckIn = event.getGuestList().getGuests().stream()
+                    Optional<Guest> guestToCheckIn = event.getGuestList().getGuestList().stream()
                             .filter(guest -> guest.getId().equals(guestId))
                             .findFirst();
 
@@ -46,7 +46,7 @@ public class GuestService {
                     GuestList guestList = Optional.ofNullable(event.getGuestList())
                             .orElseGet(() -> new GuestList(event));
                     Guest guest = convertToEntity(guestDTO);
-                    guestList.getGuests().add(guest);
+                    guestList.getGuestList().add(guest);
                     guest.setGuestList(guestList);
                     eventRepository.update(event);
                     return convertToGuestDTO(guest);
@@ -55,7 +55,7 @@ public class GuestService {
 
     public List<GuestDTO> listAllGuests(Long eventId) {
         return eventRepository.findById(eventId)
-                .map(event -> event.getGuestList().getGuests().stream()
+                .map(event -> event.getGuestList().getGuestList().stream()
                         .map(this::convertToGuestDTO)
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
@@ -64,7 +64,7 @@ public class GuestService {
     public GuestDTO updateGuestInEvent(Long eventId, Long guestId, GuestDTO updatedGuestDTO) {
         return eventRepository.findById(eventId)
                 .map(event -> {
-                    Optional<Guest> guestToUpdate = event.getGuestList().getGuests().stream()
+                    Optional<Guest> guestToUpdate = event.getGuestList().getGuestList().stream()
                             .filter(guest -> guest.getId().equals(guestId))
                             .findFirst();
 
@@ -82,7 +82,7 @@ public class GuestService {
     public boolean deleteGuestFromEvent(Long eventId, Long guestId) {
         return eventRepository.findById(eventId)
                 .map(event -> {
-                    boolean removed = event.getGuestList().getGuests().removeIf(guest ->
+                    boolean removed = event.getGuestList().getGuestList().removeIf(guest ->
                             guest.getId().equals(guestId));
 
                     if (removed) {

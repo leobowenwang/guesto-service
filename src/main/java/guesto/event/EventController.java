@@ -45,26 +45,26 @@ public class EventController {
         return eventService.listEvents();
     }
 
-    @Put("/{id}")
+    @Put("/{eventId}")
     @Secured(Role.ADMIN)
     @Operation(summary = "Update Event", description = "Updates the event with the specified ID.")
-    public HttpResponse<EventDTO> updateEvent(@PathVariable Long id, @Body EventDTO eventDTO) {
-        EventDTO updatedEventDTO = eventService.updateEvent(id, eventDTO);
+    public HttpResponse<EventDTO> updateEvent(@PathVariable Long eventId, @Body EventDTO eventDTO) {
+        EventDTO updatedEventDTO = eventService.updateEvent(eventId, eventDTO);
         return HttpResponse.ok(updatedEventDTO);
     }
 
-    @Delete("/{id}")
+    @Delete("/{eventId}")
     @Secured(Role.ADMIN)
     @Operation(summary = "Delete Event", description = "Deletes the event with the specified ID.")
-    public HttpResponse<?> deleteEvent(@PathVariable Long id, Authentication authentication) {
-        eventService.deleteEvent(id);
+    public HttpResponse<?> deleteEvent(@PathVariable Long eventId) {
+        eventService.deleteEvent(eventId);
         return HttpResponse.noContent();
     }
 
-    @Put("/{id}/checkin")
+    @Put("/{eventId}/check-in")
     @Operation(summary = "Check In Guest", description = "Checks in a guest for the event with the specified ID.")
-    public HttpResponse<?> checkInGuest(@PathVariable Long id, @Body Long guestId, Authentication authentication) {
-        boolean success = guestService.checkInGuest(id, guestId);
+    public HttpResponse<?> checkInGuest(@PathVariable Long eventId, @Body Long guestId) {
+        boolean success = guestService.checkInGuest(eventId, guestId);
         if (success) {
             return HttpResponse.ok("Guest checked in successfully.");
         } else {
@@ -72,7 +72,8 @@ public class EventController {
         }
     }
 
-    @Get("/{eventId}/guests")
+    @Get("/{eventId}/guest")
+    @Secured(Role.ADMIN)
     @Operation(summary = "List All Guests", description = "Lists all guests for the specified event.")
     public HttpResponse<List<GuestDTO>> listAllGuests(@PathVariable Long eventId) {
         List<GuestDTO> guests = guestService.listAllGuests(eventId);
@@ -80,23 +81,23 @@ public class EventController {
     }
 
 
-    @Post("/{eventId}/add-guest")
-    @Secured(Role.ADMIN)
+    @Post("/{eventId}/guest")
+    @Secured({Role.ADMIN, Role.PROMOTER})
     @Operation(summary = "Add Guest to Event", description = "Adds a guest to the specified event's guest list.")
     public HttpResponse<GuestDTO> addGuestToEvent(@PathVariable Long eventId, @Body GuestDTO guestDTO) {
         GuestDTO addedGuestDTO = guestService.addGuestToEvent(eventId, guestDTO);
         return HttpResponse.ok(addedGuestDTO);
     }
 
-    @Put("/{eventId}/guests/{guestId}")
-    @Secured(Role.ADMIN)
+    @Put("/{eventId}/guest/{guestId}")
+    @Secured({Role.ADMIN, Role.PROMOTER})
     @Operation(summary = "Update Guest in Event", description = "Updates a guest in the specified event's guest list.")
     public HttpResponse<GuestDTO> updateGuestInEvent(@PathVariable Long eventId, @PathVariable Long guestId, @Body GuestDTO updatedGuestDTO) {
         GuestDTO updatedGuest = guestService.updateGuestInEvent(eventId, guestId, updatedGuestDTO);
         return HttpResponse.ok(updatedGuest);
     }
 
-    @Delete("/{eventId}/guests/{guestId}")
+    @Delete("/{eventId}/guest/{guestId}")
     @Secured(Role.ADMIN)
     @Operation(summary = "Delete Guest from Event", description = "Deletes a guest from the specified event's guest list.")
     public HttpResponse<?> deleteGuestFromEvent(@PathVariable Long eventId, @PathVariable Long guestId) {

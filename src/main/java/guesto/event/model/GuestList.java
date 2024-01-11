@@ -16,7 +16,7 @@ public class GuestList {
     private Event event;
 
     @OneToMany(mappedBy = "guestList", cascade = CascadeType.ALL)
-    private List<Guest> guests;
+    private List<Guest> guestList;
 
     public GuestList() {
     }
@@ -25,10 +25,10 @@ public class GuestList {
         this.event = event;
     }
 
-    public GuestList(Long id, Event event, List<Guest> guests) {
+    public GuestList(Long id, Event event, List<Guest> guestList) {
         this.id = id;
         this.event = event;
-        this.guests = guests;
+        this.guestList = guestList;
     }
 
     public Long getId() {
@@ -47,11 +47,11 @@ public class GuestList {
         this.event = event;
     }
 
-    public List<Guest> getGuests() {
-        return guests;
+    public List<Guest> getGuestList() {
+        return guestList;
     }
 
-    public void setGuests(List<Guest> guests) {
-        this.guests = guests;
+    public void setGuests(List<Guest> guestList) {
+        this.guestList = guestList;
     }
 }
