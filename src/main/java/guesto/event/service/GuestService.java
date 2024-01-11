@@ -9,6 +9,7 @@ import guesto.event.repository.EventRepository;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +27,9 @@ public class GuestService {
     public boolean checkInGuest(Long eventId, Long guestId) {
         return eventRepository.findById(eventId)
                 .map(event -> {
-                    Optional<Guest> guestToCheckIn = event.getGuestList().getGuestList().stream()
+                    GuestList guestList = Optional.ofNullable(event.getGuestList())
+                            .orElse(new GuestList(event));
+                    Optional<Guest> guestToCheckIn = guestList.getGuestList().stream()
                             .filter(guest -> guest.getId().equals(guestId))
                             .findFirst();
 
@@ -55,7 +58,10 @@ public class GuestService {
 
     public List<GuestDTO> listAllGuests(Long eventId) {
         return eventRepository.findById(eventId)
-                .map(event -> event.getGuestList().getGuestList().stream()
+                .map(event -> Optional.ofNullable(event.getGuestList())
+                        .map(GuestList::getGuestList)
+                        .orElse(Collections.emptyList()) // Handle null GuestList
+                        .stream()
                         .map(this::convertToGuestDTO)
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
