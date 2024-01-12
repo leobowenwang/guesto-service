@@ -3,22 +3,21 @@ package guesto.event.dto;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
-import java.util.List;
-
 @Serdeable
 @Introspected
 public class GuestDTO {
-    private List<GuestDTO> guests;
     private String firstName;
     private String lastName;
-    private boolean isCheckedIn;
     private int additionalGuests;
+    private String comment;
+    private int customPrice;
 
-    public GuestDTO(String firstName, String lastName, boolean isCheckedIn, int additionalGuests) {
+    public GuestDTO(String firstName, String lastName, int additionalGuests, String comment, int customPrice) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.isCheckedIn = isCheckedIn;
         this.additionalGuests = additionalGuests;
+        this.comment = comment;
+        this.customPrice = customPrice;
     }
 
     public String firstName() {
@@ -39,15 +38,6 @@ public class GuestDTO {
         return this;
     }
 
-    public boolean isCheckedIn() {
-        return isCheckedIn;
-    }
-
-    public GuestDTO setCheckedIn(boolean checkedIn) {
-        isCheckedIn = checkedIn;
-        return this;
-    }
-
     public int getAdditionalGuests() {
         return additionalGuests;
     }
@@ -57,12 +47,21 @@ public class GuestDTO {
         return this;
     }
 
-    public List<GuestDTO> getGuests() {
-        return guests;
+    public String getComment() {
+        return comment;
     }
 
-    public void setGuests(List<GuestDTO> guests) {
-        this.guests = guests;
+    public GuestDTO setComment(String comment) {
+        this.comment = comment;
+        return this;
     }
 
+    public int getCustomPrice() {
+        return customPrice;
+    }
+
+    public GuestDTO setCustomPrice(int customPrice) {
+        this.customPrice = customPrice;
+        return this;
+    }
 }

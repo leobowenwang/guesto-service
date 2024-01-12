@@ -1,5 +1,7 @@
 package guesto.event.model;
 
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
 import java.util.List;

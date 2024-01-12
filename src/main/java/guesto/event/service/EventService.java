@@ -3,35 +3,49 @@ package guesto.event.service;
 import guesto.event.dto.EventDTO;
 import guesto.event.exception.EventNotFoundException;
 import guesto.event.model.Event;
+import guesto.event.model.GuestList;
 import guesto.event.repository.EventRepository;
+import guesto.event.repository.GuestListRepository;
 import io.micronaut.security.authentication.Authentication;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final GuestListRepository guestListRepository;
 
     @Inject
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, GuestListRepository guestListRepository) {
         this.eventRepository = eventRepository;
+        this.guestListRepository = guestListRepository;
     }
 
-    public Event createEvent(EventDTO eventDTO, Authentication authentication) {
+    public EventDTO createEvent(EventDTO eventDTO, Authentication authentication) {
         Event event = new Event();
         populateEventFromDTO(event, eventDTO);
         event.setCreatedBy(authentication.getName());
         event.setCreatedTime(LocalDateTime.now());
-        return eventRepository.save(event);
+
+        GuestList guestList = new GuestList();
+        guestList.setEvent(event);
+        event.setGuestList(guestList);
+
+        Event savedEvent = eventRepository.save(event);
+        return convertToEventDTO(savedEvent);
     }
 
-    public List<Event> listEvents() {
-        return eventRepository.findAll();
+    public List<EventDTO> listEvents() {
+        return eventRepository.findAll().stream()
+                .map(this::convertToEventDTO)
+                .collect(Collectors.toList());
     }
+
 
     public EventDTO updateEvent(Long id, EventDTO eventDTO) {
         return eventRepository.findById(id)
@@ -39,12 +53,21 @@ public class EventService {
                     populateEventFromDTO(existingEvent, eventDTO);
                     Event updatedEvent = eventRepository.update(existingEvent);
                     return convertToEventDTO(updatedEvent);
-                }).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + id));
+                })
+                .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + id));
     }
 
     public void deleteEvent(Long id) {
+        Event event = eventRepository.findById(id).orElseThrow(() ->
+                new EventNotFoundException("Event not found with ID: " + id));
+        GuestList guestList = event.getGuestList();
+        if (guestList != null) {
+            guestListRepository.delete(guestList);
+        }
+
         eventRepository.deleteById(id);
     }
+
 
     private void populateEventFromDTO(Event event, EventDTO dto) {
         event.setEventName(dto.getEventName());
@@ -55,6 +78,12 @@ public class EventService {
     }
 
     private EventDTO convertToEventDTO(Event event) {
-        return new EventDTO(event.getEventName(), event.getEventTime(), event.getMaxGuestList(), event.getPrice(), event.getLocation());
+        EventDTO dto = new EventDTO();
+        dto.setEventName(event.getEventName());
+        dto.setEventTime(event.getEventTime());
+        dto.setMaxGuestList(event.getMaxGuestList());
+        dto.setPrice(event.getPrice());
+        dto.setLocation(event.getLocation());
+        return dto;
     }
 }

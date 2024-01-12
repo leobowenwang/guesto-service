@@ -1,5 +1,7 @@
 package guesto.event.model;
 
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,8 +13,9 @@ public class Guest {
     private String firstName;
     private String lastName;
     private boolean isCheckedIn;
-
     private int additionalGuests;
+    private String comment;
+    private int customPrice;
 
     @ManyToOne
     @JoinColumn(name = "guest_list_id")
@@ -21,12 +24,14 @@ public class Guest {
     public Guest() {
     }
 
-    public Guest(String firstName, String lastName, boolean isCheckedIn, GuestList guestList, int additionalGuests) {
+    public Guest(String firstName, String lastName, boolean isCheckedIn, GuestList guestList, int additionalGuests, String comment, int customPrice) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isCheckedIn = isCheckedIn;
         this.guestList = guestList;
         this.additionalGuests = additionalGuests;
+        this.comment = comment;
+        this.customPrice = customPrice;
     }
 
     public Long getId() {
@@ -58,7 +63,7 @@ public class Guest {
     }
 
     public void setCheckedIn(boolean checkedIn) {
-        isCheckedIn = checkedIn;
+        this.isCheckedIn = checkedIn;
     }
 
     public int getAdditionalGuests() {
@@ -67,6 +72,22 @@ public class Guest {
 
     public void setAdditionalGuests(int additionalGuests) {
         this.additionalGuests = additionalGuests;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public int getCustomPrice() {
+        return customPrice;
+    }
+
+    public void setCustomPrice(int customPrice) {
+        this.customPrice = customPrice;
     }
 
     public GuestList getGuestList() {

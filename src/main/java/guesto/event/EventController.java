@@ -34,14 +34,14 @@ public class EventController {
     @Post
     @Secured(Role.ADMIN)
     @Operation(summary = "Create Event", description = "Creates a new event with the given details.")
-    public HttpResponse<Event> createEvent(@Body EventDTO eventDTO, Authentication authentication) {
-        Event createdEvent = eventService.createEvent(eventDTO, authentication);
+    public HttpResponse<EventDTO> createEvent(@Body EventDTO eventDTO, Authentication authentication) {
+        EventDTO createdEvent = eventService.createEvent(eventDTO, authentication);
         return HttpResponse.ok(createdEvent);
     }
 
     @Get
     @Operation(summary = "List Events", description = "Retrieves a list of all events.")
-    public List<Event> listEvents() {
+    public List<EventDTO> listEvents() {
         return eventService.listEvents();
     }
 
@@ -75,7 +75,7 @@ public class EventController {
     @Get("/{eventId}/guest")
     @Secured(Role.ADMIN)
     @Operation(summary = "List All Guests", description = "Lists all guests for the specified event.")
-    public HttpResponse<List<GuestDTO>> listAllGuests(@PathVariable Long eventId) {
+    public HttpResponse<List<GuestDTO>> listAllGuest(@PathVariable Long eventId) {
         List<GuestDTO> guests = guestService.listAllGuests(eventId);
         return HttpResponse.ok(guests);
     }
