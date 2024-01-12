@@ -1,6 +1,7 @@
 package guesto.event.service;
 
 import guesto.event.dto.EventDTO;
+import guesto.event.dto.EventResponseDTO;
 import guesto.event.exception.EventNotFoundException;
 import guesto.event.model.Event;
 import guesto.event.model.GuestList;
@@ -26,7 +27,7 @@ public class EventService {
         this.guestListRepository = guestListRepository;
     }
 
-    public EventDTO createEvent(EventDTO eventDTO, Authentication authentication) {
+    public EventResponseDTO createEvent(EventDTO eventDTO, Authentication authentication) {
         Event event = new Event();
         populateEventFromDTO(event, eventDTO);
         event.setCreatedBy(authentication.getName());
@@ -37,22 +38,22 @@ public class EventService {
         event.setGuestList(guestList);
 
         Event savedEvent = eventRepository.save(event);
-        return convertToEventDTO(savedEvent);
+        return convertToEventResponseDTO(savedEvent);
     }
 
-    public List<EventDTO> listEvents() {
+    public List<EventResponseDTO> listEvents() {
         return eventRepository.findAll().stream()
-                .map(this::convertToEventDTO)
+                .map(this::convertToEventResponseDTO)
                 .collect(Collectors.toList());
     }
 
 
-    public EventDTO updateEvent(Long id, EventDTO eventDTO) {
+    public EventResponseDTO updateEvent(Long id, EventDTO eventDTO) {
         return eventRepository.findById(id)
                 .map(existingEvent -> {
                     populateEventFromDTO(existingEvent, eventDTO);
                     Event updatedEvent = eventRepository.update(existingEvent);
-                    return convertToEventDTO(updatedEvent);
+                    return convertToEventResponseDTO(updatedEvent);
                 })
                 .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + id));
     }
@@ -77,13 +78,14 @@ public class EventService {
         event.setLocation(dto.getLocation());
     }
 
-    private EventDTO convertToEventDTO(Event event) {
-        EventDTO dto = new EventDTO();
-        dto.setEventName(event.getEventName());
-        dto.setEventTime(event.getEventTime());
-        dto.setMaxGuestList(event.getMaxGuestList());
-        dto.setPrice(event.getPrice());
-        dto.setLocation(event.getLocation());
-        return dto;
+    private EventResponseDTO convertToEventResponseDTO(Event event) {
+        return new EventResponseDTO(
+                event.getId(),
+                event.getEventName(),
+                event.getEventTime(),
+                event.getMaxGuestList(),
+                event.getPrice(),
+                event.getLocation()
+        );
     }
 }

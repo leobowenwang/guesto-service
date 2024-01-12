@@ -1,6 +1,7 @@
 package guesto.event;
 
 import guesto.event.dto.EventDTO;
+import guesto.event.dto.EventResponseDTO;
 import guesto.event.dto.GuestDTO;
 import guesto.event.dto.GuestResponseDTO;
 import guesto.event.model.Event;
@@ -35,22 +36,22 @@ public class EventController {
     @Post
     @Secured(Role.ADMIN)
     @Operation(summary = "Create Event", description = "Creates a new event with the given details.")
-    public HttpResponse<EventDTO> createEvent(@Body EventDTO eventDTO, Authentication authentication) {
-        EventDTO createdEvent = eventService.createEvent(eventDTO, authentication);
+    public HttpResponse<EventResponseDTO> createEvent(@Body EventDTO eventDTO, Authentication authentication) {
+        EventResponseDTO createdEvent = eventService.createEvent(eventDTO, authentication);
         return HttpResponse.ok(createdEvent);
     }
 
     @Get
     @Operation(summary = "List Events", description = "Retrieves a list of all events.")
-    public List<EventDTO> listEvents() {
+    public List<EventResponseDTO> listEvents() {
         return eventService.listEvents();
     }
 
     @Put("/{eventId}")
     @Secured(Role.ADMIN)
     @Operation(summary = "Update Event", description = "Updates the event with the specified ID.")
-    public HttpResponse<EventDTO> updateEvent(@PathVariable Long eventId, @Body EventDTO eventDTO) {
-        EventDTO updatedEventDTO = eventService.updateEvent(eventId, eventDTO);
+    public HttpResponse<EventResponseDTO> updateEvent(@PathVariable Long eventId, @Body EventDTO eventDTO) {
+        EventResponseDTO updatedEventDTO = eventService.updateEvent(eventId, eventDTO);
         return HttpResponse.ok(updatedEventDTO);
     }
 

@@ -8,67 +8,72 @@ import java.time.LocalDateTime;
 
 @Serdeable
 @Introspected
-public class EventDTO {
+public class EventResponseDTO {
 
+    private Long id;
     private String eventName;
     private LocalDateTime eventTime;
     private int maxGuestList;
     private BigInteger price;
     private String location;
 
-    public EventDTO() {
+    public EventResponseDTO() {
     }
 
-    public EventDTO(String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location) {
-        this(eventName, eventTime, maxGuestList, price, location, null);
-    }
-
-    public EventDTO(String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location, GuestListDTO guestList) {
+    public EventResponseDTO(Long id, String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location) {
+        this.id = id;
         this.eventName = eventName;
         this.eventTime = eventTime;
         this.maxGuestList = maxGuestList;
         this.price = price;
         this.location = location;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEventName() {
         return eventName;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
     public LocalDateTime getEventTime() {
         return eventTime;
-    }
-
-    public void setEventTime(LocalDateTime eventTime) {
-        this.eventTime = eventTime;
     }
 
     public int getMaxGuestList() {
         return maxGuestList;
     }
 
-    public void setMaxGuestList(int maxGuestList) {
-        this.maxGuestList = maxGuestList;
-    }
-
     public BigInteger getPrice() {
         return price;
-    }
-
-    public void setPrice(BigInteger price) {
-        this.price = price;
     }
 
     public String getLocation() {
         return location;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public void setEventTime(LocalDateTime eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public void setMaxGuestList(int maxGuestList) {
+        this.maxGuestList = maxGuestList;
+    }
+
+    public void setPrice(BigInteger price) {
+        this.price = price;
+    }
+
     public void setLocation(String location) {
         this.location = location;
     }
-
 }

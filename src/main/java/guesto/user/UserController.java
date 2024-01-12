@@ -26,7 +26,7 @@ public class UserController {
     private UserService userService;
 
     @Get("/list")
-    @Secured(Role.ADMIN) // Assuming only admin users should access this
+    @Secured(Role.ADMIN)
     @Operation(summary = "List All Users", description = "Lists all registered users.")
     public HttpResponse<List<UserDTO>> listUsers() {
         List<UserDTO> users = userService.listAllUsers();
