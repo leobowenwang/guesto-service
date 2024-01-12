@@ -17,7 +17,7 @@ public class GuestList {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @OneToMany(mappedBy = "guestList", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "guestList", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Guest> guestList;
 
     public GuestList() {

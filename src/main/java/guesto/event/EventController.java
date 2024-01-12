@@ -2,6 +2,7 @@ package guesto.event;
 
 import guesto.event.dto.EventDTO;
 import guesto.event.dto.GuestDTO;
+import guesto.event.dto.GuestResponseDTO;
 import guesto.event.model.Event;
 import guesto.event.service.EventService;
 import guesto.event.service.GuestService;
@@ -75,8 +76,8 @@ public class EventController {
     @Get("/{eventId}/guest")
     @Secured(Role.ADMIN)
     @Operation(summary = "List All Guests", description = "Lists all guests for the specified event.")
-    public HttpResponse<List<GuestDTO>> listAllGuest(@PathVariable Long eventId) {
-        List<GuestDTO> guests = guestService.listAllGuests(eventId);
+    public HttpResponse<List<GuestResponseDTO>> listAllGuest(@PathVariable Long eventId) {
+        List<GuestResponseDTO> guests = guestService.listAllGuests(eventId);
         return HttpResponse.ok(guests);
     }
 
@@ -84,16 +85,16 @@ public class EventController {
     @Post("/{eventId}/guest")
     @Secured({Role.ADMIN, Role.PROMOTER})
     @Operation(summary = "Add Guest to Event", description = "Adds a guest to the specified event's guest list.")
-    public HttpResponse<GuestDTO> addGuestToEvent(@PathVariable Long eventId, @Body GuestDTO guestDTO) {
-        GuestDTO addedGuestDTO = guestService.addGuestToEvent(eventId, guestDTO);
+    public HttpResponse<GuestResponseDTO> addGuestToEvent(@PathVariable Long eventId, @Body GuestDTO guestDTO) {
+        GuestResponseDTO addedGuestDTO = guestService.addGuestToEvent(eventId, guestDTO);
         return HttpResponse.ok(addedGuestDTO);
     }
 
     @Put("/{eventId}/guest/{guestId}")
     @Secured({Role.ADMIN, Role.PROMOTER})
     @Operation(summary = "Update Guest in Event", description = "Updates a guest in the specified event's guest list.")
-    public HttpResponse<GuestDTO> updateGuestInEvent(@PathVariable Long eventId, @PathVariable Long guestId, @Body GuestDTO updatedGuestDTO) {
-        GuestDTO updatedGuest = guestService.updateGuestInEvent(eventId, guestId, updatedGuestDTO);
+    public HttpResponse<GuestResponseDTO> updateGuestInEvent(@PathVariable Long eventId, @PathVariable Long guestId, @Body GuestDTO updatedGuestDTO) {
+        GuestResponseDTO updatedGuest = guestService.updateGuestInEvent(eventId, guestId, updatedGuestDTO);
         return HttpResponse.ok(updatedGuest);
     }
 
