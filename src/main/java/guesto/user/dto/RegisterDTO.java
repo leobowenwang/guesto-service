@@ -1,6 +1,5 @@
 package guesto.user.dto;
 
-import guesto.user.model.Role;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 

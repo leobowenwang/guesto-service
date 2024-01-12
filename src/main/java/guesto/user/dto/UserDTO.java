@@ -18,6 +18,10 @@ public class UserDTO {
         this.role = role;
     }
 
+    public static UserDTO fromEntity(guesto.user.model.User user) {
+        return new UserDTO(user.getId(), user.getUsername(), user.getRole());
+    }
+
     public Long getId() {
         return id;
     }
@@ -40,9 +44,5 @@ public class UserDTO {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public static UserDTO fromEntity(guesto.user.model.User user) {
-        return new UserDTO(user.getId(), user.getUsername(), user.getRole());
     }
 }

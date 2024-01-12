@@ -37,12 +37,13 @@ public class GuestListDTO {
         return this;
     }
 
+    public List<GuestDTO> getGuestList() {
+        return guestList;
+    }
+
     public GuestListDTO setGuestList(List<GuestDTO> guestList) {
         this.guestList = guestList;
         return this;
-    }
-    public List<GuestDTO> getGuestList() {
-        return guestList;
     }
 
 }

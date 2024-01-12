@@ -25,6 +25,7 @@ public class Event {
     private int checkedInGuestsCount;
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
     private GuestList guestList;
+
     public Event() {
     }
 

@@ -25,7 +25,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Event'
+                  $ref: '#/components/schemas/EventResponseDTO'
     post:
       tags:
       - Events
@@ -44,8 +44,104 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Event'
-  /event/{eventId}/add-guest:
+                $ref: '#/components/schemas/EventResponseDTO'
+  /event/{eventId}:
+    put:
+      tags:
+      - Events
+      summary: Update Event
+      description: Updates the event with the specified ID.
+      operationId: updateEvent
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventDTO'
+        required: true
+      responses:
+        "200":
+          description: updateEvent 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponseDTO'
+    delete:
+      tags:
+      - Events
+      summary: Delete Event
+      description: Deletes the event with the specified ID.
+      operationId: deleteEvent
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: deleteEvent 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+  /event/{eventId}/check-in/{guestId}:
+    put:
+      tags:
+      - Events
+      summary: Check In Guest
+      description: Checks in a guest for the event with the specified ID.
+      operationId: checkInGuest
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: guestId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: checkInGuest 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+  /event/{eventId}/guest:
+    get:
+      tags:
+      - Events
+      summary: List All Guests
+      description: Lists all guests for the specified event.
+      operationId: listAllGuest
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: listAllGuest 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GuestResponseDTO'
     post:
       tags:
       - Events
@@ -71,31 +167,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GuestDTO'
-  /event/{eventId}/guests:
-    get:
-      tags:
-      - Events
-      summary: List All Guests
-      description: Lists all guests for the specified event.
-      operationId: listAllGuests
-      parameters:
-      - name: eventId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: listAllGuests 200 response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GuestDTO'
-  /event/{eventId}/guests/{guestId}:
+                $ref: '#/components/schemas/GuestResponseDTO'
+  /event/{eventId}/guest/{guestId}:
     put:
       tags:
       - Events
@@ -127,7 +200,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GuestDTO'
+                $ref: '#/components/schemas/GuestResponseDTO'
     delete:
       tags:
       - Events
@@ -150,81 +223,6 @@ paths:
       responses:
         "200":
           description: deleteGuestFromEvent 200 response
-          content:
-            application/json:
-              schema:
-                type: object
-  /event/{id}:
-    put:
-      tags:
-      - Events
-      summary: Update Event
-      description: Updates the event with the specified ID.
-      operationId: updateEvent
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EventDTO'
-        required: true
-      responses:
-        "200":
-          description: updateEvent 200 response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EventDTO'
-    delete:
-      tags:
-      - Events
-      summary: Delete Event
-      description: Deletes the event with the specified ID.
-      operationId: deleteEvent
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: deleteEvent 200 response
-          content:
-            application/json:
-              schema:
-                type: object
-  /event/{id}/checkin:
-    put:
-      tags:
-      - Events
-      summary: Check In Guest
-      description: Checks in a guest for the event with the specified ID.
-      operationId: checkInGuest
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: integer
-              format: int64
-        required: true
-      responses:
-        "200":
-          description: checkInGuest 200 response
           content:
             application/json:
               schema:
@@ -308,37 +306,6 @@ paths:
                 type: object
 components:
   schemas:
-    Event:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          nullable: true
-        eventName:
-          type: string
-        eventTime:
-          type: string
-          format: date-time
-        maxGuestList:
-          type: integer
-          format: int32
-        price:
-          type: integer
-        location:
-          type: string
-        createdBy:
-          type: string
-        createdTime:
-          type: string
-          format: date-time
-        checkedInGuestsCount:
-          type: integer
-          format: int32
-        guestList:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/GuestList'
     EventDTO:
       type: object
       properties:
@@ -354,31 +321,29 @@ components:
           type: integer
         location:
           type: string
-        guestList:
-          $ref: '#/components/schemas/GuestListDTO'
-    Guest:
+    EventResponseDTO:
       type: object
       properties:
         id:
           type: integer
           format: int64
-          nullable: true
-        firstName:
+        eventName:
           type: string
-        lastName:
+        eventTime:
           type: string
-        checkedIn:
-          type: boolean
-        additionalGuests:
+          format: date-time
+        maxGuestList:
           type: integer
           format: int32
-        guestList:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/GuestList'
+        price:
+          type: integer
+        location:
+          type: string
     GuestDTO:
       required:
       - additionalGuests
+      - comment
+      - customPrice
       - firstName
       - lastName
       type: object
@@ -387,47 +352,40 @@ components:
           type: string
         lastName:
           type: string
-        checkedIn:
-          type: boolean
         additionalGuests:
           type: integer
           format: int32
-        guests:
-          type: array
-          items:
-            $ref: '#/components/schemas/GuestDTO'
-    GuestList:
+        comment:
+          type: string
+        customPrice:
+          type: integer
+          format: int32
+    GuestResponseDTO:
       type: object
       properties:
         id:
           type: integer
           format: int64
-          nullable: true
-        event:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/Event'
-        guests:
-          type: array
-          items:
-            $ref: '#/components/schemas/Guest'
-    GuestListDTO:
-      required:
-      - eventId
-      - guests
-      - id
-      type: object
-      properties:
-        id:
+        guestId:
           type: integer
           format: int64
-        eventId:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        additionalGuests:
           type: integer
-          format: int64
-        guests:
-          type: array
-          items:
-            $ref: '#/components/schemas/GuestDTO'
+          format: int32
+        remainingCheckIns:
+          type: integer
+          format: int32
+        checkedIn:
+          type: boolean
+        customPrice:
+          type: integer
+          format: int32
+        comment:
+          type: string
     LoginDTO:
       type: object
       properties:

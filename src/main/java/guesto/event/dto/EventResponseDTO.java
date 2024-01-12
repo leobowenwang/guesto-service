@@ -33,44 +33,44 @@ public class EventResponseDTO {
         return id;
     }
 
-    public String getEventName() {
-        return eventName;
-    }
-
-    public LocalDateTime getEventTime() {
-        return eventTime;
-    }
-
-    public int getMaxGuestList() {
-        return maxGuestList;
-    }
-
-    public BigInteger getPrice() {
-        return price;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getEventName() {
+        return eventName;
     }
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
     }
 
+    public LocalDateTime getEventTime() {
+        return eventTime;
+    }
+
     public void setEventTime(LocalDateTime eventTime) {
         this.eventTime = eventTime;
+    }
+
+    public int getMaxGuestList() {
+        return maxGuestList;
     }
 
     public void setMaxGuestList(int maxGuestList) {
         this.maxGuestList = maxGuestList;
     }
 
+    public BigInteger getPrice() {
+        return price;
+    }
+
     public void setPrice(BigInteger price) {
         this.price = price;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public void setLocation(String location) {
