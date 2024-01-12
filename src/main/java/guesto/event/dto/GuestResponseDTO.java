@@ -7,23 +7,29 @@ import io.micronaut.serde.annotation.Serdeable;
 @Introspected
 public class GuestResponseDTO {
     private Long id;
+    private Long guestId;
     private String firstName;
     private String lastName;
     private int additionalGuests;
-    private String comment;
+    private int remainingCheckIns;
+    private boolean checkedIn;
     private int customPrice;
-    private Long guestId;
+    private String comment;
 
     public GuestResponseDTO() {
     }
 
-    public GuestResponseDTO(String firstName, String lastName, int additionalGuests, String comment, int customPrice, Long guestId) {
+    public GuestResponseDTO(Long id, Long guestId, String firstName, String lastName, int additionalGuests,
+                            int remainingCheckIns, boolean checkedIn, int customPrice, String comment) {
+        this.id = id;
+        this.guestId = guestId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.additionalGuests = additionalGuests;
-        this.comment = comment;
+        this.remainingCheckIns = remainingCheckIns;
+        this.checkedIn = checkedIn;
         this.customPrice = customPrice;
-        this.guestId = guestId;
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -32,6 +38,14 @@ public class GuestResponseDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getGuestId() {
+        return guestId;
+    }
+
+    public void setGuestId(Long guestId) {
+        this.guestId = guestId;
     }
 
     public String getFirstName() {
@@ -58,12 +72,20 @@ public class GuestResponseDTO {
         this.additionalGuests = additionalGuests;
     }
 
-    public String getComment() {
-        return comment;
+    public int getRemainingCheckIns() {
+        return remainingCheckIns;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setRemainingCheckIns(int remainingCheckIns) {
+        this.remainingCheckIns = remainingCheckIns;
+    }
+
+    public boolean isCheckedIn() {
+        return checkedIn;
+    }
+
+    public void setCheckedIn(boolean checkedIn) {
+        this.checkedIn = checkedIn;
     }
 
     public int getCustomPrice() {
@@ -74,11 +96,11 @@ public class GuestResponseDTO {
         this.customPrice = customPrice;
     }
 
-    public Long getGuestId() {
-        return guestId;
+    public String getComment() {
+        return comment;
     }
 
-    public void setGuestId(Long guestId) {
-        this.guestId = guestId;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

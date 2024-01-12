@@ -4,7 +4,6 @@ import guesto.event.dto.EventDTO;
 import guesto.event.dto.EventResponseDTO;
 import guesto.event.dto.GuestDTO;
 import guesto.event.dto.GuestResponseDTO;
-import guesto.event.model.Event;
 import guesto.event.service.EventService;
 import guesto.event.service.GuestService;
 import guesto.user.model.Role;
@@ -63,15 +62,12 @@ public class EventController {
         return HttpResponse.noContent();
     }
 
-    @Put("/{eventId}/check-in")
+    @Put("/{eventId}/check-in/{guestId}")
     @Operation(summary = "Check In Guest", description = "Checks in a guest for the event with the specified ID.")
-    public HttpResponse<?> checkInGuest(@PathVariable Long eventId, @Body Long guestId) {
-        boolean success = guestService.checkInGuest(eventId, guestId);
-        if (success) {
-            return HttpResponse.ok("Guest checked in successfully.");
-        } else {
-            return HttpResponse.badRequest("Unable to check in guest.");
-        }
+    public HttpResponse<?> checkInGuest(@PathVariable Long eventId, @PathVariable Long guestId) {
+        GuestResponseDTO responseDTO = guestService.checkInGuest(eventId, guestId);
+
+        return HttpResponse.ok(responseDTO);
     }
 
     @Get("/{eventId}/guest")

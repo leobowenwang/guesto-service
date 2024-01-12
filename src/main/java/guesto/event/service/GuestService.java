@@ -8,6 +8,7 @@ import guesto.event.model.Guest;
 import guesto.event.model.GuestList;
 import guesto.event.repository.EventRepository;
 import guesto.event.repository.GuestListRepository;
+import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -29,22 +30,32 @@ public class GuestService {
         this.guestListRepository = guestListRepository;
     }
 
-
-    public boolean checkInGuest(Long eventId, Long guestId) {
+    @Transactional
+    public GuestResponseDTO checkInGuest(Long eventId, Long guestId) {
         return eventRepository.findById(eventId).map(event -> {
             GuestList guestList = guestListRepository.findByEventId(event.getId()).orElse(new GuestList(event));
             Optional<Guest> guestToCheckIn = guestList.getGuestList().stream().filter(guest -> guest.getId().equals(guestId)).findFirst();
 
-            if (guestToCheckIn.isPresent() && !guestToCheckIn.get().isCheckedIn()) {
-                guestToCheckIn.get().setCheckedIn(true);
-                event.incrementCheckedInGuests();
-                guestListRepository.update(guestList);
-                eventRepository.update(event);
-                return true;
+            if (guestToCheckIn.isPresent()) {
+                Guest guest = guestToCheckIn.get();
+                // Check if the guest has any remaining check-ins
+                if (guest.getRemainingCheckIns() > 0) {
+                    guest.setCheckedIn(true);
+                    guest.setRemainingCheckIns(guest.getRemainingCheckIns() - 1);
+                    guestListRepository.update(guestList);
+                    eventRepository.update(event);
+                    return convertToGuestResponseDTO(guest);
+                } else {
+                    // Reset remaining check-ins when it reaches zero
+                    guest.setRemainingCheckIns(guest.getAdditionalGuests());
+                    guestListRepository.update(guestList);
+                    return convertToGuestResponseDTO(guest);
+                }
             }
-            return false;
-        }).orElse(false);
+            throw new GuestNotFoundException("Guest not found");
+        }).orElseThrow(() -> new EventNotFoundException("Event not found"));
     }
+
 
     public GuestResponseDTO addGuestToEvent(Long eventId, GuestDTO guestDTO) {
         return eventRepository.findById(eventId).map(event -> {
@@ -110,7 +121,9 @@ public class GuestService {
     }
 
     private Guest convertToEntity(GuestDTO guestDTO) {
-        return new Guest(guestDTO.firstName(), guestDTO.lastName(), false, null, guestDTO.getAdditionalGuests(), guestDTO.getComment(), guestDTO.getCustomPrice());
+        return new Guest(guestDTO.firstName(), guestDTO.lastName(), false, null,
+                guestDTO.getAdditionalGuests(), guestDTO.getComment(),
+                guestDTO.getCustomPrice(), guestDTO.getAdditionalGuests());
     }
 
     private GuestResponseDTO convertToGuestResponseDTO(Guest guest) {
@@ -121,7 +134,7 @@ public class GuestService {
         dto.setAdditionalGuests(guest.getAdditionalGuests());
         dto.setComment(guest.getComment());
         dto.setCustomPrice(guest.getCustomPrice());
+        dto.setRemainingCheckIns(guest.getRemainingCheckIns());
         return dto;
     }
-
 }

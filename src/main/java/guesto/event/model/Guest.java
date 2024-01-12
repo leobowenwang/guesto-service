@@ -1,7 +1,5 @@
 package guesto.event.model;
 
-import io.micronaut.core.annotation.Introspected;
-import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +12,7 @@ public class Guest {
     private String lastName;
     private boolean isCheckedIn;
     private int additionalGuests;
+    private int remainingCheckIns;
     private String comment;
     private int customPrice;
 
@@ -24,7 +23,8 @@ public class Guest {
     public Guest() {
     }
 
-    public Guest(String firstName, String lastName, boolean isCheckedIn, GuestList guestList, int additionalGuests, String comment, int customPrice) {
+    public Guest(String firstName, String lastName, boolean isCheckedIn, GuestList guestList,
+                 int additionalGuests, String comment, int customPrice, int remainingCheckIns) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isCheckedIn = isCheckedIn;
@@ -32,6 +32,7 @@ public class Guest {
         this.additionalGuests = additionalGuests;
         this.comment = comment;
         this.customPrice = customPrice;
+        this.remainingCheckIns = remainingCheckIns;
     }
 
     public Long getId() {
@@ -72,6 +73,14 @@ public class Guest {
 
     public void setAdditionalGuests(int additionalGuests) {
         this.additionalGuests = additionalGuests;
+    }
+
+    public int getRemainingCheckIns() {
+        return remainingCheckIns;
+    }
+
+    public void setRemainingCheckIns(int remainingCheckIns) {
+        this.remainingCheckIns = remainingCheckIns;
     }
 
     public String getComment() {
