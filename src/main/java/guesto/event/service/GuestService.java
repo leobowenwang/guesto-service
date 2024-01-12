@@ -34,27 +34,30 @@ public class GuestService {
     public GuestResponseDTO checkInGuest(Long eventId, Long guestId) {
         return eventRepository.findById(eventId).map(event -> {
             GuestList guestList = guestListRepository.findByEventId(event.getId()).orElse(new GuestList(event));
-            Optional<Guest> guestToCheckIn = guestList.getGuestList().stream().filter(guest -> guest.getId().equals(guestId)).findFirst();
+            Optional<Guest> guestToCheckIn = guestList.getGuestList().stream()
+                    .filter(guest -> guest.getId().equals(guestId))
+                    .findFirst();
 
             if (guestToCheckIn.isPresent()) {
                 Guest guest = guestToCheckIn.get();
-                // Check if the guest has any remaining check-ins
-                if (guest.getRemainingCheckIns() > 0) {
-                    guest.setCheckedIn(true);
+
+                // Check if guest is already checked in but remaining check-ins haven't been reset yet
+                if (guest.isCheckedIn() && guest.getRemainingCheckIns() == 0) {
+                    guest.setRemainingCheckIns(guest.getAdditionalGuests() + 1);
+                    guest.setCheckedIn(false);
+                } else if (guest.getRemainingCheckIns() > 0) {
                     guest.setRemainingCheckIns(guest.getRemainingCheckIns() - 1);
-                    guestListRepository.update(guestList);
-                    eventRepository.update(event);
-                    return convertToGuestResponseDTO(guest);
-                } else {
-                    // Reset remaining check-ins when it reaches zero
-                    guest.setRemainingCheckIns(guest.getAdditionalGuests());
-                    guestListRepository.update(guestList);
-                    return convertToGuestResponseDTO(guest);
+                    guest.setCheckedIn(guest.getRemainingCheckIns() == 0);
                 }
+
+                guestListRepository.update(guestList);
+                eventRepository.update(event);
+                return convertToGuestResponseDTO(guest);
             }
             throw new GuestNotFoundException("Guest not found");
         }).orElseThrow(() -> new EventNotFoundException("Event not found"));
     }
+
 
 
     public GuestResponseDTO addGuestToEvent(Long eventId, GuestDTO guestDTO) {
@@ -123,7 +126,7 @@ public class GuestService {
     private Guest convertToEntity(GuestDTO guestDTO) {
         return new Guest(guestDTO.firstName(), guestDTO.lastName(), false, null,
                 guestDTO.getAdditionalGuests(), guestDTO.getComment(),
-                guestDTO.getCustomPrice(), guestDTO.getAdditionalGuests());
+                guestDTO.getCustomPrice(), guestDTO.getAdditionalGuests() + 1);
     }
 
     private GuestResponseDTO convertToGuestResponseDTO(Guest guest) {
@@ -135,6 +138,7 @@ public class GuestService {
         dto.setComment(guest.getComment());
         dto.setCustomPrice(guest.getCustomPrice());
         dto.setRemainingCheckIns(guest.getRemainingCheckIns());
+        dto.setCheckedIn(guest.isCheckedIn());
         return dto;
     }
 }
