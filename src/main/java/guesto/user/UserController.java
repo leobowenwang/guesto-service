@@ -46,6 +46,15 @@ public class UserController {
         return userService.register(registerDTO).map(HttpResponse::created).orElseGet(HttpResponse::badRequest);
     }
 
+    @Put("/{userId}")
+    @Secured(Role.ADMIN)
+    @Operation(summary = "Update User", description = "Updates a user's details with the specified ID.")
+    public HttpResponse<?> updateUser(@PathVariable Long userId, @Body UserDTO userDTO) {
+        return userService.updateUser(userId, userDTO)
+                .map(updatedUser -> HttpResponse.ok(updatedUser))
+                .orElseGet(() -> HttpResponse.notFound());
+    }
+
     @Delete("/{userId}")
     @Secured("ADMIN")
     @Operation(summary = "Delete User", description = "Deletes a user with the specified ID.")

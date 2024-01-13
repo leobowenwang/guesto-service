@@ -47,6 +47,16 @@ public class UserService {
         return Optional.of(newUser);
     }
 
+    public Optional<UserDTO> updateUser(Long userId, UserDTO updatedUserDTO) {
+        return userRepository.findById(userId).map(user -> {
+            user.setUsername(updatedUserDTO.getUsername());
+            user.setRole(updatedUserDTO.getRole());
+
+            userRepository.update(user);
+            return UserDTO.fromEntity(user);
+        });
+    }
+
     public boolean deleteUser(Long userId) {
         return userRepository.findById(userId).map(user -> {
             userRepository.delete(user);
