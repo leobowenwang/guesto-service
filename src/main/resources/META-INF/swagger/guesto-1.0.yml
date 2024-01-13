@@ -284,6 +284,32 @@ paths:
               schema:
                 type: object
   /user/{userId}:
+    put:
+      tags:
+      - Users
+      summary: Update User
+      description: Updates a user's details with the specified ID.
+      operationId: updateUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        "200":
+          description: updateUser 200 response
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
       - Users
