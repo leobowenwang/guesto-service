@@ -4,11 +4,7 @@ micronaut:
   server:
     port: 8080
   cors:
-    enabled: true
-    config:
-      allow-origin: "*"
-      allow-methods: "*"
-      allow-headers: "*"
+    enabled: false
   router:
     static-resources:
       swaggerui:
