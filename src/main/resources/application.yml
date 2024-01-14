@@ -3,8 +3,8 @@ micronaut:
     name: guestoService
   server:
     port: 8080
-  cors:
-    enabled: false
+    cors:
+      enabled: true
   router:
     static-resources:
       swaggerui:
