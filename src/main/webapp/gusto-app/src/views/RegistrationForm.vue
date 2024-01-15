@@ -1,22 +1,20 @@
 <template>
+  <v-alert v-if="registrationSuccess" type="success">Registrierung erfolgreich!</v-alert>
+  <v-alert v-if="registrationFailed" type="error">Registrierung fehlgeschlagen!</v-alert>
   <div>
     <h2>Registrierung</h2>
-    <form @submit.prevent="submitForm">
-      <label for="username">Benutzername:</label>
-      <input type="text" id="username" v-model="formData.username" required>
-
-      <label for="password">Passwort:</label>
-      <input type="password" id="password" v-model="formData.password" required>
-
-      <label for="role">Rolle:</label>
-      <select id="role" v-model="formData.role" required>
-        <option value="admin">Admin</option>
-        <option value="mitarbeiter">Mitarbeiter</option>
-        <option value="kontrolleur">Kontrolleur</option>
-      </select>
-
-      <button type="submit">Registrieren</button>
-    </form>
+    <v-form @submit.prevent>
+      <v-text-field type="text" id="username" v-model="formData.username" required label="Benutzername"></v-text-field>
+      <v-text-field type="password" id="password" v-model="formData.password" required label="Passwort"></v-text-field>
+      <v-select
+          v-model="formData.role"
+          label="Rolle"
+          :items="roleOptions"
+          item-title="label"
+          item-value="value"
+      ></v-select>
+      <v-btn class="text-none mb-4" color="#48EDDD" size="x-large" block @click="submitForm()">Registrieren</v-btn>
+    </v-form>
   </div>
 </template>
 
@@ -31,22 +29,32 @@ export default {
         username: '',
         password: '',
         role: 'ADMIN' // Default-Rolle
-      }
+      },
+      roleOptions: [],
+      registrationSuccess: false,
+      registrationFailed: false
     };
   },
   methods: {
     async submitForm() {
+      this.registrationSuccess = false;
+      this.registrationFailed = false;
       try {
-        // Hier fügst du die Logik für die API-Anfrage ein
         const response = await this.$axios.post(BASE_URL, this.formData);
-
-        // Handle die API-Antwort nach Bedarf
-        console.log('Registrierung erfolgreich:', response.data);
+        if (response) {
+          this.registrationSuccess = true;
+        }
       } catch (error) {
-        // Handle einen Fehler bei der API-Anfrage
-        console.error('Fehler bei der Registrierung:', error);
+        this.registrationFailed = true;
       }
     }
+  },
+  created() {
+    this.roleOptions = [
+      { value: 'ADMIN', label: 'Admin' },
+      { value: 'STAFF', label: 'Mitarbeiter' },
+      { value: 'PROMOTER', label: 'Promoter' }
+    ];
   },
   name: 'RegistrationForm'
 }
