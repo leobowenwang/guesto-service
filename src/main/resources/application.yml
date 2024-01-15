@@ -5,6 +5,31 @@ micronaut:
     port: 8080
     cors:
       enabled: true
+      configurations:
+        default:
+          allowedOrigins:
+            - "*"
+          allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+          allowedHeaders:
+            - "*"
+          allowCredentials: true
+          sensitive: false
+  security:
+    enabled: true
+    intercept-url-map:
+      - pattern: '/swagger-ui/**'
+        http-method: GET
+        access:
+          - isAnonymous()
+      - pattern: '/swagger/**'
+        http-method: GET
+        access:
+          - isAnonymous()
   router:
     static-resources:
       swaggerui:
@@ -19,17 +44,6 @@ micronaut:
     health:
       enabled: true
       sensitive: false
-  security:
-    enabled: true
-    intercept-url-map:
-      - pattern: '/swagger-ui/**'
-        http-method: GET
-        access:
-          - isAnonymous()
-      - pattern: '/swagger/**'
-        http-method: GET
-        access:
-          - isAnonymous()
 
 datasources:
   default:
