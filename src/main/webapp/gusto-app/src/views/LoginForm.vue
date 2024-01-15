@@ -12,7 +12,7 @@
 </template>
 
 <script>
-
+import store from '../auth/store';
 const BASE_URL='http://localhost:8080/user/login';
 
 export default {
@@ -34,10 +34,15 @@ export default {
         console.log(this.formData);
         const response = await this.$axios.post(BASE_URL, this.formData);
         this.loginSuccess = true;
-        console.log('Anmeldung erfolgreich:', response.data);
-        setTimeout(() => {
-          this.$router.push('/events');
-        }, 1000);
+        if (response.status === 200) {
+          store.state.auth.loggedIn = true
+          console.log(response.data.token);
+          store.commit('auth/setJWT', response.data.token)
+          setTimeout(() => {
+            this.$router.push('/events');
+          }, 1000);
+          console.log('Anmeldung erfolgreich:', response.data);
+        }
       } catch (error) {
         this.loginFailed = true;
         console.error('Fehler bei der Anmeldung:', error);
