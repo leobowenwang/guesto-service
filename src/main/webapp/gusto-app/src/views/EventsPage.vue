@@ -11,7 +11,7 @@
 </template>
 <script>
 import authHeader from '../auth/auth-header';
-const BASE_URL='http://localhost:8080/user/event';
+const BASE_URL='http://localhost:8080/event';
 
 export default {
   data() {
