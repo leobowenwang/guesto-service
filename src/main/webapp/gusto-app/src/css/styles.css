@@ -1,3 +1,7 @@
 .events-page ul {
     background-color: #48EDDD;
 }
+
+.v-data-table__tr {
+    text-align: start;
+}
