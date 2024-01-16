@@ -34,28 +34,3 @@ jobs:
         with:
           name: java-app
           path: build/libs/*.jar
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment: Production
-
-    steps:
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: java-app
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'guesto'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_034D3F06DA914D8BA842B6248C49CAB3 }}
-          package: 'guesto-1.0.0.jar'
