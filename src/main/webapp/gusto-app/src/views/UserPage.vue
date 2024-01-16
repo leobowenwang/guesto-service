@@ -27,7 +27,6 @@ export default {
   },
   methods: {
     fetchData() {
-      console.log(authHeader());
       this.$axios.get(BASE_URL, {
         params: {},
         headers: authHeader()

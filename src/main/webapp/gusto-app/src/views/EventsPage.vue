@@ -3,8 +3,10 @@
 //todo felder required setzen - validierung
 
 <template>
-  <v-alert v-if="saveSuccess && showAlert" type="success">Speichern erfolgreich!</v-alert>
-  <v-alert v-if="saveFailed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
+  <v-alert v-if="success && showAlert" type="success">Speichern erfolgreich!</v-alert>
+  <v-alert v-if="failed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
+  <v-alert v-if="deleteSuccess && showAlert" type="success">Löschen erfolgreich!</v-alert>
+  <v-alert v-if="deleteFailed && showAlert" type="error">Löschen fehlgeschlagen!</v-alert>
   <v-container v-if="!selectedEvent">
     <v-data-table
         :items="events"
@@ -79,8 +81,10 @@ export default {
         price: 0,
         location: ''
       },
-      saveSuccess: false,
-      saveFailed: false,
+      success: false,
+      failed: false,
+      deleteSuccess: false,
+      deleteFailed: false,
       showAlert: false
     }
   },
@@ -127,15 +131,42 @@ export default {
       this.fetchData();
     },
     createEvent() {
-      console.log("WUHU");
       this.selectedEvent = true;
     },
     editEvent(item) {
-      console.log("edit:" + item.price);
-      console.log("this.events" + this.events.find(o => o.id === item.id).price);
       this.selectedEvent = true;
       this.formData = {...this.events.find(o => o.id === item.id)};
-      console.log(this.formData);
+    },
+    async deleteItem(item) {
+      const userConfirmed = window.confirm("Sind Sie sicher, dass Sie dieses Event löschen möchten?");
+
+      if (!userConfirmed) {
+        return;
+      }
+      this.deleteSuccess = false;
+      this.deleteFailed = false;
+      try {
+        console.log("Löschen " + item.id);
+        let response = await this.$axios.delete(BASE_URL + '/' + item.id, {
+          params: {},
+          headers: authHeader()
+        });
+        if (response) {
+          this.deleteSuccess = true;
+          this.showAlert = true;
+          setTimeout(() => {
+            this.showAlert = false;
+          },2000);
+          this.cancelForm();
+          this.fetchData();
+        }
+      } catch (error) {
+        this.deleteFailed = true;
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        },2000);
+      }
     },
     cancelForm() {
       this.selectedEvent = false;
@@ -148,8 +179,8 @@ export default {
       }
     },
     async submitForm() {
-      this.saveSuccess = false;
-      this.saveFailed = false;
+      this.success = false;
+      this.failed = false;
       try {
         let response;
         if (this.formData.id) {
@@ -166,7 +197,7 @@ export default {
           });
         }
         if (response) {
-          this.saveSuccess = true;
+          this.success = true;
           this.showAlert = true;
           setTimeout(() => {
             this.showAlert = false;
@@ -175,7 +206,7 @@ export default {
           this.fetchData();
         }
       } catch (error) {
-        this.saveFailed = true;
+        this.failed = true;
         this.showAlert = true;
         setTimeout(() => {
           this.showAlert = false;

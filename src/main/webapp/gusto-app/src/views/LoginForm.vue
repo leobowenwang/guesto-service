@@ -31,12 +31,10 @@ export default {
       this.loginSuccess = false;
       this.loginFailed = false;
       try {
-        console.log(this.formData);
         const response = await this.$axios.post(BASE_URL, this.formData);
         this.loginSuccess = true;
         if (response.status === 200) {
           store.state.auth.loggedIn = true
-          console.log(response.data.token);
           store.commit('auth/setJWT', response.data.token)
           setTimeout(() => {
             this.$router.push('/events');

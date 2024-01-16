@@ -9,7 +9,6 @@ export const auth = {
     setJWT(state, token) {
       localStorage.setItem('token', token)
       state.access_token = token
-      console.log(state.access_token);
     },
     logout(state) {
       state.loggedIn = false
