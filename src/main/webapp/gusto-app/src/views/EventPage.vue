@@ -224,58 +224,6 @@ export default {
         },2000);
       }
     },
-    addGuest() {
-      this.openDialog();
-    },
-    openDialog() {
-      this.guestDialogVisible = true;
-    },
-    closeDialog() {
-      this.guestDialogVisible = false;
-      this.guestData = {
-        firstName: '',
-        lastName: '',
-        additionalGuests: 0,
-        comment: '',
-        customPrice: 0
-      };
-    },
-    async saveGuest() {
-      console.log(this.guestData);
-      this.success = false;
-      this.failed = false;
-      try {
-        let response;
-        if (this.guestData.id) {
-          console.log("UMÄNDERN");
-          response = await this.$axios.put(BASE_URL + '/' + this.formData.id + '/guest/' + this.guestData.id, this.guestData, {
-            params: {},
-            headers: authHeader()
-          });
-        } else {
-          console.log("NEEEU");
-          response = await this.$axios.post(BASE_URL + '/' + this.formData.id + '/guest', this.guestData, {
-            params: {},
-            headers: authHeader()
-          });
-        }
-        if (response) {
-          this.success = true;
-          this.showAlert = true;
-          setTimeout(() => {
-            this.showAlert = false;
-          },2000);
-          this.closeDialog();
-          //todo update shown guests??
-        }
-      } catch (error) {
-        this.failed = true;
-        this.showAlert = true;
-        setTimeout(() => {
-          this.showAlert = false;
-        },2000);
-      }
-    },
   },
   watch: {
     '$route.query.page'() {
