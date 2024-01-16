@@ -1,6 +1,7 @@
 //todo felder required setzen - validierung
 //todo update guest funktioniert nicht (backend)
 //todo delete guest funktioniert nicht (backend)
+//todo Gast hinzufügen button nur wenn das Event von meinem User ist oder mir zugewiesen
 <template>
   <v-alert v-if="success && showAlert" type="success">Speichern erfolgreich!</v-alert>
   <v-alert v-if="failed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
@@ -10,7 +11,7 @@
   <v-expansion-panels style="margin-bottom: 20px">
     <v-expansion-panel>
       <v-expansion-panel-title>
-        <v-row no-gutters>
+        <v-row>
           <v-col cols="4" class="d-flex justify-start">
             Gäste
           </v-col>
@@ -29,10 +30,20 @@
           >
             <template v-slot:item="{ item }">
               <tr>
-                <td>{{ item.firstName }}</td>
-                <td>{{ item.lastName }}</td>
+                <td>{{ item.firstName + ' ' + item.lastName }}</td>
                 <td>{{ item.additionalGuests }}</td>
-                <td>{{ item.remainingCheckIns }}</td>
+                <td>
+                  <v-icon
+                      size="small"
+                      class="me-2"
+                      @click="checkInGuest(item)"
+                      v-if="item.remainingCheckIns > 0"
+                      color="green"
+                  >
+                    mdi-checkbox-marked
+                  </v-icon>
+                  {{ item.remainingCheckIns }}
+                </td>
                 <td>{{ item.checkedIn }}</td>
                 <td>{{ item.customPrice }}</td>
                 <td>{{ item.comment }}</td>
@@ -41,12 +52,14 @@
                       size="small"
                       class="me-2"
                       @click="editGuest(item)"
+                      color="rgb(72, 237, 221)"
                   >
                     mdi-pencil
                   </v-icon>
                   <v-icon
                       size="small"
                       @click="deleteGuest(item)"
+                      color="rgb(200, 35, 51)"
                   >
                     mdi-delete
                   </v-icon>
@@ -57,7 +70,7 @@
           <v-btn class="text-none mb-4 right-btn" color="#48EDDD" @click="addGuest()">Gast hinzufügen</v-btn>
           <v-dialog v-model="guestDialogVisible" max-width="500">
             <v-card>
-              <v-card-title>Gast hinzufügen</v-card-title>
+              <v-card-title>{{ guestData.id ? 'Gast bearbeiten': 'Gast hinzufügen'}}</v-card-title>
               <v-card-text>
                 <v-form @submit.prevent>
                   <v-text-field type="text" id="firstName" v-model="guestData.firstName" required label="Vorname"></v-text-field>
@@ -68,7 +81,7 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn class="text-none mb-4" color="#c82333" @click="closeDialog()">Abbrechen</v-btn>
+                <v-btn class="text-none mb-4" color="#ffc107" @click="closeDialog()">Abbrechen</v-btn>
                 <v-btn type="submit" class="text-none mb-4" color="#28a745" @click="saveGuest()">Speichern</v-btn>
               </v-card-actions>
             </v-card>
@@ -93,12 +106,11 @@ export default {
     return {
       guests: [],
       headers: [
-        { title: 'Vorname', value: 'firstName' },
-        { title: 'Nachname', value: 'lastName' },
+        { title: 'Name', value: 'firstName' + 'lastName' },
         { title: 'Anzahl Begleitung', value: 'additionalGuests' },
         { title: 'Übrige Check-ins', key: 'remainingCheckIns' },
         { title: 'Eingecheckt', key: 'checkedIn' },
-        { title: 'Benutzerdefinierter Preis', key: 'customPrice' },
+        { title: 'B.def. Preis', key: 'customPrice' },
         { title: 'Kommentar', key: 'comment' },
         { title: 'Aktionen', key: 'actions' },
       ],
@@ -238,6 +250,30 @@ export default {
         },2000);
       }
     },
+    async checkInGuest(item) {
+      console.log(item);
+      try {
+        console.log("UMÄNDERN");
+        let response = await this.$axios.put(BASE_URL + '/' + this.eventId + '/check-in/' + item.id, {},{
+            params: {},
+            headers: authHeader()
+          });
+        if (response) {
+          this.success = true;
+          this.showAlert = true;
+          setTimeout(() => {
+            this.showAlert = false;
+          },2000);
+          this.fetchData();
+        }
+      } catch (error) {
+        this.failed = true;
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        },2000);
+      }
+    }
   },
   watch: {
     '$route.query.page'() {
