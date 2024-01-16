@@ -7,6 +7,7 @@ import guesto.event.dto.GuestResponseDTO;
 import guesto.event.service.EventService;
 import guesto.event.service.GuestService;
 import guesto.user.model.Role;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
@@ -40,18 +41,17 @@ public class EventController {
         return HttpResponse.ok(createdEvent);
     }
 
-    @Get
+    @Get("/{?sortBy,order}")
     @Operation(summary = "List Events", description = "Retrieves a list of all events.")
-    public List<EventResponseDTO> listEvents() {
-        return eventService.listEvents();
+    public List<EventResponseDTO> listEvents(@Nullable @QueryValue String sortBy, @Nullable @QueryValue String order) {
+        return eventService.listEventsSorted(sortBy, "asc".equalsIgnoreCase(order));
     }
+
 
     @Get("/{eventId}")
     @Operation(summary = "Get Event Detail", description = "Retrieves the details of a specific event.")
     public HttpResponse<EventResponseDTO> getEventDetail(@PathVariable Long eventId) {
-        return eventService.getEventById(eventId)
-                .map(HttpResponse::ok)
-                .orElse(HttpResponse.notFound());
+        return eventService.getEventById(eventId).map(HttpResponse::ok).orElse(HttpResponse.notFound());
     }
 
     @Put("/{eventId}")

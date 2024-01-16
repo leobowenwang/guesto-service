@@ -12,9 +12,11 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Singleton
 public class EventService {
@@ -44,6 +46,28 @@ public class EventService {
 
     public List<EventResponseDTO> listEvents() {
         return eventRepository.findAll().stream().map(this::convertToEventResponseDTO).collect(Collectors.toList());
+    }
+
+    public List<EventResponseDTO> listEventsSorted(String sortField, boolean isAscending) {
+        Stream<Event> eventStream = eventRepository.findAll().stream();
+
+        if (sortField != null && !sortField.isEmpty()) {
+            Comparator<Event> comparator = switch (sortField.toLowerCase()) {
+                case "id" -> Comparator.comparing(Event::getId);
+                case "eventname" -> Comparator.comparing(Event::getEventName);
+                case "eventtime" -> Comparator.comparing(Event::getEventTime);
+                case "maxguestlist" -> Comparator.comparing(Event::getMaxGuestList);
+                case "price" -> Comparator.comparing(Event::getPrice);
+                case "location" -> Comparator.comparing(Event::getLocation);
+                default -> null;
+            };
+
+            if (comparator != null) {
+                eventStream = isAscending ? eventStream.sorted(comparator) : eventStream.sorted(comparator.reversed());
+            }
+        }
+
+        return eventStream.map(this::convertToEventResponseDTO).collect(Collectors.toList());
     }
 
     public Optional<EventResponseDTO> getEventById(Long eventId) {
