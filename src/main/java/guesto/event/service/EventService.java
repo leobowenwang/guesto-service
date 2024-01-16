@@ -98,7 +98,12 @@ public class EventService {
     }
 
     private EventResponseDTO convertToEventResponseDTO(Event event) {
-        return new EventResponseDTO(event.getId(), event.getEventName(), event.getEventTime(), event.getMaxGuestList(), event.getPrice(), event.getLocation(), event.getCreatedBy(), event.getCreatedTime());
+        EventResponseDTO dto = new EventResponseDTO(event.getId(), event.getEventName(), event.getEventTime(),
+                event.getMaxGuestList(), event.getPrice(), event.getLocation(),
+                event.getCreatedBy(), event.getCreatedTime());
+        dto.setCheckedInGuestsCount(event.getCheckedInGuestsCount());
+        dto.setTotalGuestCount(event.getTotalGuestCount());
+        return dto;
     }
 
 }

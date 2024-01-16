@@ -18,7 +18,8 @@ public class EventResponseDTO {
     private String location;
     private String createdBy;
     private LocalDateTime createdTime;
-
+    private int checkedInGuestsCount;
+    private int totalGuestCount;
     public EventResponseDTO() {
     }
 
@@ -95,5 +96,20 @@ public class EventResponseDTO {
 
     public void setCreatedTime(LocalDateTime createdTime) {
         this.createdTime = createdTime;
+    }
+    public int getCheckedInGuestsCount() {
+        return checkedInGuestsCount;
+    }
+
+    public void setCheckedInGuestsCount(int checkedInGuestsCount) {
+        this.checkedInGuestsCount = checkedInGuestsCount;
+    }
+
+    public int getTotalGuestCount() {
+        return totalGuestCount;
+    }
+
+    public void setTotalGuestCount(int totalGuestCount) {
+        this.totalGuestCount = totalGuestCount;
     }
 }

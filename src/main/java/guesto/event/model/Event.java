@@ -123,4 +123,11 @@ public class Event {
         this.guestList = guestList;
     }
 
+    public int getTotalGuestCount() {
+        if (guestList == null || guestList.getGuestList() == null) {
+            return 0;
+        }
+        return guestList.getGuestList().stream().mapToInt(guest -> guest.getAdditionalGuests() + 1).sum();
+    }
+
 }
