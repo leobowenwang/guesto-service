@@ -46,6 +46,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/EventResponseDTO'
   /event/{eventId}:
+    get:
+      tags:
+      - Events
+      summary: Get Event Detail
+      description: Retrieves the details of a specific event.
+      operationId: getEventDetail
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: getEventDetail 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponseDTO'
     put:
       tags:
       - Events
