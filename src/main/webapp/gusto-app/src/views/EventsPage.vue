@@ -1,3 +1,7 @@
+//todo event bearbeiten
+//todo event löschen
+//todo felder required setzen - validierung
+
 <template>
   <v-alert v-if="saveSuccess && showAlert" type="success">Speichern erfolgreich!</v-alert>
   <v-alert v-if="saveFailed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
@@ -10,7 +14,29 @@
         item-key="eventName"
         :loading="loading"
         @update:page="onPageChange"
-        >
+    >
+      <template v-slot:item="{ item }">
+        <tr>
+          <td>{{ item.eventName }}</td>
+          <td>{{ item.eventTimeDisplay }}</td>
+          <td>{{ item.location }}</td>
+          <td>
+            <v-icon
+                size="small"
+                class="me-2"
+                @click="editEvent(item)"
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+                size="small"
+                @click="deleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
+          </td>
+        </tr>
+      </template>
     </v-data-table>
     <v-btn class="text-none mb-4 create-btn" color="#48EDDD" @click="createEvent()">Erstellen</v-btn>
   </v-container>
@@ -40,6 +66,7 @@ export default {
         { title: 'Event Name', value: 'eventName' },
         { title: 'Event Time', value: 'eventTime' },
         { title: 'Location', value: 'location' },
+        { title: 'Actions', key: 'actions' },
       ],
       itemsPerPage: 5, // Anzahl der Elemente pro Seite
       totalEvents: 0,
@@ -47,7 +74,7 @@ export default {
       selectedEvent: false,
       formData: {
         eventName: '',
-        eventTime: new Date,
+        eventTime: null,
         maxGuestList: 0,
         price: 0,
         location: ''
@@ -72,7 +99,13 @@ export default {
       }).then(response => {
             this.events = response.data;
             this.totalEvents = Number(response.headers['x-total-count']);
-            this.events.forEach(o => o.eventTime = this.formatDate(o.eventTime));
+            this.events.forEach(o => {
+              o.eventTimeDisplay = this.formatDate(o.eventTime);
+              const dateTime = new Date(o.eventTime);
+              const localTime = new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000);
+              o.eventTime = localTime.toISOString().slice(0, 16);
+            });
+            this.events.actions = '';
             this.loading = false;
           })
           .catch(error => {
@@ -97,6 +130,13 @@ export default {
       console.log("WUHU");
       this.selectedEvent = true;
     },
+    editEvent(item) {
+      console.log("edit:" + item.price);
+      console.log("this.events" + this.events.find(o => o.id === item.id).price);
+      this.selectedEvent = true;
+      this.formData = {...this.events.find(o => o.id === item.id)};
+      console.log(this.formData);
+    },
     cancelForm() {
       this.selectedEvent = false;
       this.formData = {
@@ -111,10 +151,20 @@ export default {
       this.saveSuccess = false;
       this.saveFailed = false;
       try {
-        const response = await this.$axios.post(BASE_URL, this.formData, {
-          params: {},
-          headers: authHeader()
-        });
+        let response;
+        if (this.formData.id) {
+          console.log("UMÄNDERN");
+          response = await this.$axios.put(BASE_URL + '/' + this.formData.id, this.formData, {
+            params: {},
+            headers: authHeader()
+          });
+        } else {
+          console.log("NEEEU");
+          response = await this.$axios.post(BASE_URL, this.formData, {
+            params: {},
+            headers: authHeader()
+          });
+        }
         if (response) {
           this.saveSuccess = true;
           this.showAlert = true;
@@ -122,6 +172,7 @@ export default {
             this.showAlert = false;
           },2000);
           this.cancelForm();
+          this.fetchData();
         }
       } catch (error) {
         this.saveFailed = true;
