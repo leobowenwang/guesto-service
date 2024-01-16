@@ -87,7 +87,7 @@ public class EventController {
     }
 
     @Post("/{eventId}/guest")
-    @Secured({Role.ADMIN, Role.PROMOTER})
+    @Secured({Role.ADMIN, Role.STAFF})
     @Operation(summary = "Add Guest to Event", description = "Adds a guest to the specified event's guest list.")
     public HttpResponse<GuestResponseDTO> addGuestToEvent(@PathVariable Long eventId, @Body GuestDTO guestDTO) {
         GuestResponseDTO addedGuestDTO = guestService.addGuestToEvent(eventId, guestDTO);
@@ -95,7 +95,7 @@ public class EventController {
     }
 
     @Put("/{eventId}/guest/{guestId}")
-    @Secured({Role.ADMIN, Role.PROMOTER})
+    @Secured({Role.ADMIN, Role.STAFF})
     @Operation(summary = "Update Guest in Event", description = "Updates a guest in the specified event's guest list.")
     public HttpResponse<GuestResponseDTO> updateGuestInEvent(@PathVariable Long eventId, @PathVariable Long guestId, @Body GuestDTO updatedGuestDTO) {
         GuestResponseDTO updatedGuest = guestService.updateGuestInEvent(eventId, guestId, updatedGuestDTO);

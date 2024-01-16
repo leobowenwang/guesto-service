@@ -16,17 +16,21 @@ public class EventResponseDTO {
     private int maxGuestList;
     private BigInteger price;
     private String location;
+    private String createdBy;
+    private LocalDateTime createdTime;
 
     public EventResponseDTO() {
     }
 
-    public EventResponseDTO(Long id, String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location) {
+    public EventResponseDTO(Long id, String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location, String createdBy, LocalDateTime createdTime) {
         this.id = id;
         this.eventName = eventName;
         this.eventTime = eventTime;
         this.maxGuestList = maxGuestList;
         this.price = price;
         this.location = location;
+        this.createdBy = createdBy;
+        this.createdTime = createdTime;
     }
 
     public Long getId() {
@@ -75,5 +79,21 @@ public class EventResponseDTO {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
     }
 }
