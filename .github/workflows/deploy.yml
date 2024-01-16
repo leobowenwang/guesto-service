@@ -23,7 +23,7 @@ jobs:
         run: ls -R
 
       - name: Change directory to Vue.js app
-        run: cd src/main/webapp/gusto-app
+        run: cd $GITHUB_WORKSPACE/src/main/webapp/gusto-app
 
       - name: Install Vue.js dependencies
         run: npm install
