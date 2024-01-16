@@ -10,12 +10,28 @@
     float: right;
 }
 
-.save-btn {
+.right-btn {
     float: right;
     margin-left: 10px;
 }
 
-.cancel-btn {
-    float: right;
+.success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.danger {
+    background-color: #c82333;
+    color: white;
+}
+
+.left-btn {
+    float: left;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
 }
 

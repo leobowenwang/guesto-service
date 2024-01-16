@@ -1,5 +1,3 @@
-//todo event bearbeiten
-//todo event löschen
 //todo felder required setzen - validierung
 
 <template>
@@ -43,21 +41,26 @@
     <v-btn class="text-none mb-4 create-btn" color="#48EDDD" @click="createEvent()">Erstellen</v-btn>
   </v-container>
   <v-container v-if="!!selectedEvent">
-    <v-form @submit.prevent>
+    <v-form @submit.prevent="submitForm">
       <v-text-field type="text" id="eventName" v-model="formData.eventName" required label="Event Name"></v-text-field>
       <v-text-field type="datetime-local" id="eventTime" v-model="formData.eventTime" required label="Event Zeit"></v-text-field>
       <v-text-field type="number" id="maxGuestList" v-model="formData.maxGuestList" required label="Max Anzahl Gäste"></v-text-field>
       <v-text-field type="number" id="price" v-model="formData.price" required label="Preis"></v-text-field>
       <v-text-field type="text" id="location" v-model="formData.location" required label="Location"></v-text-field>
+      <div v-if="formData.id">
+        <guest-view :eventId="formData.id"></guest-view>
+      </div>
+      <div style="clear: both"></div>
       <div>
-        <v-btn class="text-none mb-4 save-btn" color="#48EDDD" @click="submitForm()">Speichern</v-btn>
-        <v-btn class="text-none mb-4 cancel-btn" color="#48EDDD" @click="cancelForm()">Abbrechen</v-btn>
+        <v-btn type="submit" class="text-none mb-4 right-btn" color="#28a745">Speichern</v-btn>
+        <v-btn class="text-none mb-4 left-btn" color="#c82333" @click="cancelForm()">Abbrechen</v-btn>
       </div>
     </v-form>
   </v-container>
 </template>
 <script>
 import authHeader from '../auth/auth-header';
+import GuestView from "@/views/GuestView";
 const BASE_URL='http://localhost:8080/event';
 
 export default {
@@ -68,7 +71,7 @@ export default {
         { title: 'Event Name', value: 'eventName' },
         { title: 'Event Time', value: 'eventTime' },
         { title: 'Location', value: 'location' },
-        { title: 'Actions', key: 'actions' },
+        { title: 'Aktionen', key: 'actions' },
       ],
       itemsPerPage: 5, // Anzahl der Elemente pro Seite
       totalEvents: 0,
@@ -85,11 +88,20 @@ export default {
       failed: false,
       deleteSuccess: false,
       deleteFailed: false,
-      showAlert: false
+      showAlert: false,
+      guestDialogVisible: false,
+      guestData: {
+        firstName: '',
+        lastName: '',
+        additionalGuests: 0,
+        comment: '',
+        customPrice: 0
+      },
     }
   },
   name: 'EventsPage',
   components: {
+    GuestView
   },
   methods: {
     fetchData() {
@@ -157,7 +169,6 @@ export default {
           setTimeout(() => {
             this.showAlert = false;
           },2000);
-          this.cancelForm();
           this.fetchData();
         }
       } catch (error) {
@@ -176,7 +187,7 @@ export default {
         maxGuestList: 0,
         price: 0,
         location: ''
-      }
+      };
     },
     async submitForm() {
       this.success = false;
@@ -212,7 +223,59 @@ export default {
           this.showAlert = false;
         },2000);
       }
-    }
+    },
+    addGuest() {
+      this.openDialog();
+    },
+    openDialog() {
+      this.guestDialogVisible = true;
+    },
+    closeDialog() {
+      this.guestDialogVisible = false;
+      this.guestData = {
+        firstName: '',
+        lastName: '',
+        additionalGuests: 0,
+        comment: '',
+        customPrice: 0
+      };
+    },
+    async saveGuest() {
+      console.log(this.guestData);
+      this.success = false;
+      this.failed = false;
+      try {
+        let response;
+        if (this.guestData.id) {
+          console.log("UMÄNDERN");
+          response = await this.$axios.put(BASE_URL + '/' + this.formData.id + '/guest/' + this.guestData.id, this.guestData, {
+            params: {},
+            headers: authHeader()
+          });
+        } else {
+          console.log("NEEEU");
+          response = await this.$axios.post(BASE_URL + '/' + this.formData.id + '/guest', this.guestData, {
+            params: {},
+            headers: authHeader()
+          });
+        }
+        if (response) {
+          this.success = true;
+          this.showAlert = true;
+          setTimeout(() => {
+            this.showAlert = false;
+          },2000);
+          this.closeDialog();
+          //todo update shown guests??
+        }
+      } catch (error) {
+        this.failed = true;
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        },2000);
+      }
+    },
   },
   watch: {
     '$route.query.page'() {
