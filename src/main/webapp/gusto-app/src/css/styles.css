@@ -2,7 +2,7 @@
     background-color: #48EDDD;
 }
 
-.v-data-table__tr {
+.th, td {
     text-align: start;
 }
 
