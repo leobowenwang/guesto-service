@@ -46,6 +46,14 @@ public class EventController {
         return eventService.listEvents();
     }
 
+    @Get("/{eventId}")
+    @Operation(summary = "Get Event Detail", description = "Retrieves the details of a specific event.")
+    public HttpResponse<EventResponseDTO> getEventDetail(@PathVariable Long eventId) {
+        return eventService.getEventById(eventId)
+                .map(HttpResponse::ok)
+                .orElse(HttpResponse.notFound());
+    }
+
     @Put("/{eventId}")
     @Secured(Role.ADMIN)
     @Operation(summary = "Update Event", description = "Updates the event with the specified ID.")

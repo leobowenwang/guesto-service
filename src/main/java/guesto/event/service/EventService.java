@@ -13,6 +13,7 @@ import jakarta.inject.Singleton;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -42,25 +43,23 @@ public class EventService {
     }
 
     public List<EventResponseDTO> listEvents() {
-        return eventRepository.findAll().stream()
-                .map(this::convertToEventResponseDTO)
-                .collect(Collectors.toList());
+        return eventRepository.findAll().stream().map(this::convertToEventResponseDTO).collect(Collectors.toList());
     }
 
+    public Optional<EventResponseDTO> getEventById(Long eventId) {
+        return eventRepository.findById(eventId).map(this::convertToEventResponseDTO);
+    }
 
     public EventResponseDTO updateEvent(Long id, EventDTO eventDTO) {
-        return eventRepository.findById(id)
-                .map(existingEvent -> {
-                    populateEventFromDTO(existingEvent, eventDTO);
-                    Event updatedEvent = eventRepository.update(existingEvent);
-                    return convertToEventResponseDTO(updatedEvent);
-                })
-                .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + id));
+        return eventRepository.findById(id).map(existingEvent -> {
+            populateEventFromDTO(existingEvent, eventDTO);
+            Event updatedEvent = eventRepository.update(existingEvent);
+            return convertToEventResponseDTO(updatedEvent);
+        }).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + id));
     }
 
     public void deleteEvent(Long id) {
-        Event event = eventRepository.findById(id).orElseThrow(() ->
-                new EventNotFoundException("Event not found with ID: " + id));
+        Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + id));
         GuestList guestList = event.getGuestList();
         if (guestList != null) {
             guestListRepository.delete(guestList);
@@ -79,13 +78,6 @@ public class EventService {
     }
 
     private EventResponseDTO convertToEventResponseDTO(Event event) {
-        return new EventResponseDTO(
-                event.getId(),
-                event.getEventName(),
-                event.getEventTime(),
-                event.getMaxGuestList(),
-                event.getPrice(),
-                event.getLocation()
-        );
+        return new EventResponseDTO(event.getId(), event.getEventName(), event.getEventTime(), event.getMaxGuestList(), event.getPrice(), event.getLocation());
     }
 }
