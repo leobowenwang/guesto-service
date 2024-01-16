@@ -78,14 +78,13 @@ public class EventController {
         return HttpResponse.ok(responseDTO);
     }
 
-    @Get("/{eventId}/guest")
+    @Get("/{eventId}/guest{?sortBy,order}")
     @Secured(Role.ADMIN)
     @Operation(summary = "List All Guests", description = "Lists all guests for the specified event.")
-    public HttpResponse<List<GuestResponseDTO>> listAllGuest(@PathVariable Long eventId) {
-        List<GuestResponseDTO> guests = guestService.listAllGuests(eventId);
+    public HttpResponse<List<GuestResponseDTO>> listAllGuest(@PathVariable Long eventId, @Nullable @QueryValue String sortBy, @Nullable @QueryValue String order) {
+        List<GuestResponseDTO> guests = guestService.listAllGuests(eventId, sortBy, "asc".equalsIgnoreCase(order));
         return HttpResponse.ok(guests);
     }
-
 
     @Post("/{eventId}/guest")
     @Secured({Role.ADMIN, Role.PROMOTER})

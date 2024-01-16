@@ -44,10 +44,6 @@ public class EventService {
         return convertToEventResponseDTO(savedEvent);
     }
 
-    public List<EventResponseDTO> listEvents() {
-        return eventRepository.findAll().stream().map(this::convertToEventResponseDTO).collect(Collectors.toList());
-    }
-
     public List<EventResponseDTO> listEventsSorted(String sortField, boolean isAscending) {
         Stream<Event> eventStream = eventRepository.findAll().stream();
 
