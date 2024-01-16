@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Introspected
@@ -20,16 +21,20 @@ public class Event {
     private int maxGuestList;
     private BigInteger price;
     private String location;
-    private String createdBy;
+    private Long createdBy;
     private LocalDateTime createdTime;
     private int checkedInGuestsCount;
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
     private GuestList guestList;
+    @ElementCollection
+    @CollectionTable(name = "event_user_assignment", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "user_id")
+    private List<Long> assignedUserIds;
 
     public Event() {
     }
 
-    public Event(String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location, String createdBy, LocalDateTime createdTime) {
+    public Event(String eventName, LocalDateTime eventTime, int maxGuestList, BigInteger price, String location, Long createdBy, LocalDateTime createdTime) {
         this.eventName = eventName;
         this.eventTime = eventTime;
         this.maxGuestList = maxGuestList;
@@ -87,13 +92,6 @@ public class Event {
         this.location = location;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
 
     public LocalDateTime getCreatedTime() {
         return createdTime;
@@ -121,6 +119,30 @@ public class Event {
 
     public void setGuestList(GuestList guestList) {
         this.guestList = guestList;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdByUserId) {
+        this.createdBy = createdByUserId;
+    }
+
+    public List<Long> getAssignedUserIds() {
+        return assignedUserIds;
+    }
+
+    public void setAssignedUserIds(List<Long> assignedUserIds) {
+        this.assignedUserIds = assignedUserIds;
+    }
+
+    public void assignUserId(Long userId) {
+        this.assignedUserIds.add(userId);
+    }
+
+    public void unassignUserId(Long userId) {
+        this.assignedUserIds.remove(userId);
     }
 
     public int getTotalGuestCount() {

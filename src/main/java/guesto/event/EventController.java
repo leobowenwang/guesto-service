@@ -54,6 +54,18 @@ public class EventController {
         return eventService.getEventById(eventId).map(HttpResponse::ok).orElse(HttpResponse.notFound());
     }
 
+    @Post("/{eventId}/assign")
+    public HttpResponse<?> assignUserToEvent(Long eventId, @Body Long userId) {
+        eventService.assignUserToEvent(userId, eventId);
+        return HttpResponse.ok();
+    }
+
+    @Post("/{eventId}/unassign")
+    public HttpResponse<?> unassignUserFromEvent(Long eventId, @Body Long userId) {
+        eventService.unassignUserFromEvent(userId, eventId);
+        return HttpResponse.ok();
+    }
+
     @Put("/{eventId}")
     @Secured(Role.ADMIN)
     @Operation(summary = "Update Event", description = "Updates the event with the specified ID.")

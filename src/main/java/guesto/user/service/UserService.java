@@ -3,6 +3,7 @@ package guesto.user.service;
 import guesto.user.dto.RegisterDTO;
 import guesto.user.dto.UserDTO;
 import guesto.user.exception.UsernameAlreadyExistsException;
+import guesto.user.model.GuestoToken;
 import guesto.user.model.User;
 import guesto.user.repository.UserRepository;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
@@ -24,14 +25,14 @@ public class UserService {
         this.jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public Optional<String> login(UsernamePasswordCredentials credentials) {
-        return userRepository.findByUsername(credentials.getUsername()).filter(user -> BCrypt.checkpw(credentials.getPassword(), user.getPassword())).map(user -> {
+    public Optional<GuestoToken> login(UsernamePasswordCredentials credentials) {
+        return userRepository.findByUsername(credentials.getUsername()).filter(user -> BCrypt.checkpw(credentials.getPassword(), user.getPassword())).flatMap(user -> {
             Map<String, Object> claims = new HashMap<>();
             claims.put("sub", user.getUsername());
+            claims.put("userId", user.getId());
             claims.put("roles", Collections.singletonList(user.getRole()));
 
-            Optional<String> token = jwtTokenGenerator.generateToken(claims);
-            return token.orElse(null);
+            return jwtTokenGenerator.generateToken(claims).map(token -> new GuestoToken(token, user.getId()));
         });
     }
 

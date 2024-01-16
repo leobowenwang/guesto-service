@@ -7,6 +7,8 @@ import guesto.event.model.Event;
 import guesto.event.model.GuestList;
 import guesto.event.repository.EventRepository;
 import guesto.event.repository.GuestListRepository;
+import guesto.user.model.User;
+import guesto.user.repository.UserRepository;
 import io.micronaut.security.authentication.Authentication;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -23,17 +25,22 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final GuestListRepository guestListRepository;
+    private final UserRepository userRepository;
 
     @Inject
-    public EventService(EventRepository eventRepository, GuestListRepository guestListRepository) {
+    public EventService(EventRepository eventRepository, GuestListRepository guestListRepository, UserRepository userRepository) {
         this.eventRepository = eventRepository;
         this.guestListRepository = guestListRepository;
+        this.userRepository = userRepository;
     }
 
     public EventResponseDTO createEvent(EventDTO eventDTO, Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Event event = new Event();
         populateEventFromDTO(event, eventDTO);
-        event.setCreatedBy(authentication.getName());
+        event.setCreatedBy(user.getId());
         event.setCreatedTime(LocalDateTime.now());
 
         GuestList guestList = new GuestList();
@@ -88,6 +95,32 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
+    public void assignUserToEvent(Long userId, Long eventId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        Optional<Event> eventOpt = eventRepository.findById(eventId);
+
+        if (userOpt.isPresent() && eventOpt.isPresent()) {
+            Event event = eventOpt.get();
+            event.assignUserId(userId);
+            eventRepository.save(event);
+        } else {
+            throw new EventNotFoundException("User or Event not found");
+        }
+    }
+
+    public void unassignUserFromEvent(Long userId, Long eventId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        Optional<Event> eventOpt = eventRepository.findById(eventId);
+
+        if (userOpt.isPresent() && eventOpt.isPresent()) {
+            Event event = eventOpt.get();
+            event.unassignUserId(userId);
+            eventRepository.save(event);
+        } else {
+            throw new EventNotFoundException("User or Event not found");
+        }
+    }
+
 
     private void populateEventFromDTO(Event event, EventDTO dto) {
         event.setEventName(dto.getEventName());
@@ -98,9 +131,7 @@ public class EventService {
     }
 
     private EventResponseDTO convertToEventResponseDTO(Event event) {
-        EventResponseDTO dto = new EventResponseDTO(event.getId(), event.getEventName(), event.getEventTime(),
-                event.getMaxGuestList(), event.getPrice(), event.getLocation(),
-                event.getCreatedBy(), event.getCreatedTime());
+        EventResponseDTO dto = new EventResponseDTO(event.getId(), event.getEventName(), event.getEventTime(), event.getMaxGuestList(), event.getPrice(), event.getLocation(), event.getCreatedBy(), event.getCreatedTime());
         dto.setCheckedInGuestsCount(event.getCheckedInGuestsCount());
         dto.setTotalGuestCount(event.getTotalGuestCount());
         return dto;

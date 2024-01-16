@@ -7,6 +7,7 @@ import guesto.user.dto.UserDTO;
 import guesto.user.model.Role;
 import guesto.user.service.UserService;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
@@ -35,9 +36,15 @@ public class UserController {
 
     @Post("/login")
     @Operation(summary = "User Login", description = "Authenticates a user with the provided credentials.")
-    public HttpResponse<?> login(@Body LoginDTO loginDTO) {
+    public MutableHttpResponse<LoginResponseDTO> login(@Body LoginDTO loginDTO) {
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginDTO.getUsername(), loginDTO.getPassword());
-        return userService.login(credentials).map(token -> HttpResponse.ok(new LoginResponseDTO(loginDTO.getUsername(), token))).orElseGet(HttpResponse::unauthorized);
+        return userService.login(credentials)
+                .map(guestoToken -> {
+                    Long userId = guestoToken.getUserId();
+                    String token = guestoToken.getToken();
+                    return HttpResponse.ok(new LoginResponseDTO(userId, loginDTO.getUsername(), token));
+                })
+                .orElseGet(HttpResponse::unauthorized);
     }
 
     @Post("/register")
