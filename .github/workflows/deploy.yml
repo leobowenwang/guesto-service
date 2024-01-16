@@ -20,7 +20,7 @@ jobs:
           node-version: '14'
 
       - name: Change directory to Vue.js app
-        run: cd guesto-service/src/main/webapp/gusto-app
+        run: cd /src/main/webapp/gusto-app
 
       - name: Install Vue.js dependencies
         run: npm install
