@@ -4,6 +4,7 @@ import guesto.event.dto.GuestDTO;
 import guesto.event.dto.GuestResponseDTO;
 import guesto.event.exception.EventNotFoundException;
 import guesto.event.exception.GuestNotFoundException;
+import guesto.event.model.Event;
 import guesto.event.model.Guest;
 import guesto.event.model.GuestList;
 import guesto.event.repository.EventRepository;
@@ -13,10 +14,11 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Singleton
 public class GuestService {
@@ -34,9 +36,7 @@ public class GuestService {
     public GuestResponseDTO checkInGuest(Long eventId, Long guestId) {
         return eventRepository.findById(eventId).map(event -> {
             GuestList guestList = guestListRepository.findByEventId(event.getId()).orElse(new GuestList(event));
-            Optional<Guest> guestToCheckIn = guestList.getGuestList().stream()
-                    .filter(guest -> guest.getId().equals(guestId))
-                    .findFirst();
+            Optional<Guest> guestToCheckIn = guestList.getGuestList().stream().filter(guest -> guest.getId().equals(guestId)).findFirst();
 
             if (guestToCheckIn.isPresent()) {
                 Guest guest = guestToCheckIn.get();
@@ -59,7 +59,6 @@ public class GuestService {
     }
 
 
-
     public GuestResponseDTO addGuestToEvent(Long eventId, GuestDTO guestDTO) {
         return eventRepository.findById(eventId).map(event -> {
             GuestList guestList = guestListRepository.findByEventId(event.getId()).orElseGet(() -> new GuestList(event));
@@ -76,9 +75,31 @@ public class GuestService {
         }).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
     }
 
-    public List<GuestResponseDTO> listAllGuests(Long eventId) {
-        return eventRepository.findById(eventId).map(event -> guestListRepository.findByEventId(event.getId()).map(GuestList::getGuestList).orElse(Collections.emptyList())
-                .stream().map(this::convertToGuestResponseDTO).collect(Collectors.toList())).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
+    public List<GuestResponseDTO> listAllGuests(Long eventId, String sortField, boolean isAscending) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
+        List<Guest> guests = event.getGuestList().getGuestList();
+
+        Stream<Guest> guestStream = guests.stream();
+
+        if (sortField != null && !sortField.isEmpty()) {
+            Comparator<Guest> comparator = switch (sortField.toLowerCase()) {
+                case "id" -> Comparator.comparing(Guest::getId);
+                case "firstname" -> Comparator.comparing(Guest::getFirstName);
+                case "lastname" -> Comparator.comparing(Guest::getLastName);
+                case "additionalguests" -> Comparator.comparing(Guest::getAdditionalGuests);
+                case "remainingcheckins" -> Comparator.comparing(Guest::getRemainingCheckIns);
+                case "checkedin" -> Comparator.comparing(Guest::isCheckedIn);
+                case "comment" -> Comparator.comparing(Guest::getComment);
+                case "customprice" -> Comparator.comparing(Guest::getCustomPrice);
+                default -> null;
+            };
+
+            if (comparator != null) {
+                guestStream = isAscending ? guestStream.sorted(comparator) : guestStream.sorted(comparator.reversed());
+            }
+        }
+
+        return guestStream.map(this::convertToGuestResponseDTO).collect(Collectors.toList());
     }
 
 
@@ -124,9 +145,7 @@ public class GuestService {
     }
 
     private Guest convertToEntity(GuestDTO guestDTO) {
-        return new Guest(guestDTO.firstName(), guestDTO.lastName(), false, null,
-                guestDTO.getAdditionalGuests(), guestDTO.getComment(),
-                guestDTO.getCustomPrice(), guestDTO.getAdditionalGuests() + 1);
+        return new Guest(guestDTO.firstName(), guestDTO.lastName(), false, null, guestDTO.getAdditionalGuests(), guestDTO.getComment(), guestDTO.getCustomPrice(), guestDTO.getAdditionalGuests() + 1);
     }
 
     private GuestResponseDTO convertToGuestResponseDTO(Guest guest) {
