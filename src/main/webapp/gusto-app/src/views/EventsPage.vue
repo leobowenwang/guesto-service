@@ -1,5 +1,7 @@
 <template>
-  <v-container>
+  <v-alert v-if="saveSuccess && showAlert" type="success">Speichern erfolgreich!</v-alert>
+  <v-alert v-if="saveFailed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
+  <v-container v-if="!selectedEvent">
     <v-data-table
         :items="events"
         :headers="headers"
@@ -10,6 +12,20 @@
         @update:page="onPageChange"
         >
     </v-data-table>
+    <v-btn class="text-none mb-4 create-btn" color="#48EDDD" @click="createEvent()">Erstellen</v-btn>
+  </v-container>
+  <v-container v-if="!!selectedEvent">
+    <v-form @submit.prevent>
+      <v-text-field type="text" id="eventName" v-model="formData.eventName" required label="Event Name"></v-text-field>
+      <v-text-field type="datetime-local" id="eventTime" v-model="formData.eventTime" required label="Event Zeit"></v-text-field>
+      <v-text-field type="number" id="maxGuestList" v-model="formData.maxGuestList" required label="Max Anzahl Gäste"></v-text-field>
+      <v-text-field type="number" id="price" v-model="formData.price" required label="Preis"></v-text-field>
+      <v-text-field type="text" id="location" v-model="formData.location" required label="Location"></v-text-field>
+      <div>
+        <v-btn class="text-none mb-4 save-btn" color="#48EDDD" @click="submitForm()">Speichern</v-btn>
+        <v-btn class="text-none mb-4 cancel-btn" color="#48EDDD" @click="cancelForm()">Abbrechen</v-btn>
+      </div>
+    </v-form>
   </v-container>
 </template>
 <script>
@@ -28,6 +44,17 @@ export default {
       itemsPerPage: 5, // Anzahl der Elemente pro Seite
       totalEvents: 0,
       loading: false,
+      selectedEvent: false,
+      formData: {
+        eventName: '',
+        eventTime: new Date,
+        maxGuestList: 0,
+        price: 0,
+        location: ''
+      },
+      saveSuccess: false,
+      saveFailed: false,
+      showAlert: false
     }
   },
   name: 'EventsPage',
@@ -63,14 +90,50 @@ export default {
       return formattedDate;
     },
     onPageChange(page) {
-      // Hier kann die aktuelle Seite in der URL aktualisiert werden
       this.$router.push({ query: { page } });
       this.fetchData();
     },
+    createEvent() {
+      console.log("WUHU");
+      this.selectedEvent = true;
+    },
+    cancelForm() {
+      this.selectedEvent = false;
+      this.formData = {
+        eventName: '',
+        eventTime: new Date,
+        maxGuestList: 0,
+        price: 0,
+        location: ''
+      }
+    },
+    async submitForm() {
+      this.saveSuccess = false;
+      this.saveFailed = false;
+      try {
+        const response = await this.$axios.post(BASE_URL, this.formData, {
+          params: {},
+          headers: authHeader()
+        });
+        if (response) {
+          this.saveSuccess = true;
+          this.showAlert = true;
+          setTimeout(() => {
+            this.showAlert = false;
+          },2000);
+          this.cancelForm();
+        }
+      } catch (error) {
+        this.saveFailed = true;
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        },2000);
+      }
+    }
   },
   watch: {
     '$route.query.page'() {
-      // Aktualisiere die Daten, wenn die Seite in der URL geändert wird
       this.fetchData();
     },
   },
