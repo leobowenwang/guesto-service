@@ -41,7 +41,6 @@ public class GuestService {
             if (guestToCheckIn.isPresent()) {
                 Guest guest = guestToCheckIn.get();
 
-                // Check if guest is already checked in but remaining check-ins haven't been reset yet
                 if (guest.isCheckedIn() && guest.getRemainingCheckIns() == 0) {
                     guest.setRemainingCheckIns(guest.getAdditionalGuests() + 1);
                     guest.setCheckedIn(false);
@@ -105,13 +104,9 @@ public class GuestService {
 
     public GuestResponseDTO updateGuestInEvent(Long eventId, Long guestId, GuestDTO updatedGuestDTO) {
         return eventRepository.findById(eventId).map(event -> {
-            GuestList guestList = guestListRepository.findByEventId(event.getId())
-                    .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
+            GuestList guestList = guestListRepository.findByEventId(event.getId()).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
 
-            Guest guestToUpdate = guestList.getGuestList().stream()
-                    .filter(guest -> guest.getId().equals(guestId))
-                    .findFirst()
-                    .orElseThrow(() -> new GuestNotFoundException("Guest not found with ID: " + guestId));
+            Guest guestToUpdate = guestList.getGuestList().stream().filter(guest -> guest.getId().equals(guestId)).findFirst().orElseThrow(() -> new GuestNotFoundException("Guest not found with ID: " + guestId));
 
             updateGuestFromDTO(guestToUpdate, updatedGuestDTO);
 
@@ -121,12 +116,9 @@ public class GuestService {
         }).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
     }
 
-
-
     public boolean deleteGuestFromEvent(Long eventId, Long guestId) {
         return eventRepository.findById(eventId).map(event -> {
-            GuestList guestList = guestListRepository.findByEventId(event.getId())
-                    .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
+            GuestList guestList = guestListRepository.findByEventId(event.getId()).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
 
             boolean removed = guestList.getGuestList().removeIf(guest -> guest.getId().equals(guestId));
             if (removed) {
