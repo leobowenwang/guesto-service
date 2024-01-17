@@ -6,6 +6,7 @@
           <v-col>
             <router-link to="/events" class="nav-link">Events</router-link>
             <router-link to="/users" class="nav-link" v-if="isAdmin">Benutzer</router-link>
+            <router-link to="/help" class="nav-link">Hilfe</router-link>
             <button @click="logout" class="button button--primary button_navigation nav-link right-btn">Logout</button>
           </v-col>
         </v-row>

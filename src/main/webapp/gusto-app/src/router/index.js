@@ -3,6 +3,7 @@ import LoginForm from '../views/LoginForm.vue'
 import EventPage from '../views/EventPage'
 import UserPage from "@/views/UserPage";
 import store from '../auth/store';
+import HelpPage from "@/views/HelpPage";
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -17,6 +18,7 @@ const routes = [
     component: UserPage,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
+  { path: '/help', component: HelpPage },
 ]
 
 const router = createRouter({
