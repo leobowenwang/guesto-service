@@ -45,16 +45,18 @@
     <v-btn class="text-none mb-4 create-btn" color="#2196F3" @click="createEvent()">Erstellen</v-btn>
   </v-container>
   <v-container v-if="!!selectedEvent">
-    <v-form @submit.prevent="submitForm">
-      <v-text-field type="text" id="eventName" v-model="formData.eventName" required label="Event Name"></v-text-field>
-      <v-text-field type="datetime-local" id="eventTime" v-model="formData.eventTime" required label="Event Zeit"></v-text-field>
-      <v-text-field type="number" id="maxGuestList" v-model="formData.maxGuestList" required label="Max Anzahl Gäste"></v-text-field>
-      <v-text-field type="number" id="price" v-model="formData.price" required label="Preis"></v-text-field>
-      <v-text-field type="text" id="location" v-model="formData.location" required label="Location"></v-text-field>
+    <v-form ref="form" @submit.prevent="submitForm">
+      <v-text-field type="text" id="eventName" v-model="formData.eventName" :rules="[v => !!v || 'Bitte Event Name eingeben']" required label="Event Name"></v-text-field>
+      <v-text-field type="datetime-local" id="eventTime" v-model="formData.eventTime" :rules="[v => !!v || 'Bitte Event Zeit eingeben']" required label="Event Zeit"></v-text-field>
+      <v-text-field type="number" id="maxGuestList" v-model="formData.maxGuestList" :rules="[v => !!v || 'Bitte Max Anzahl Gäste eingeben']" required label="Max Anzahl Gäste"></v-text-field>
+      <v-text-field type="number" id="price" v-model="formData.price" :rules="[v => !!v || 'Bitte Preis eingeben']" required label="Preis"></v-text-field>
+      <v-text-field type="text" id="location" v-model="formData.location" :rules="[v => !!v || 'Bitte Location eingeben']" required label="Location"></v-text-field>
+
       <div v-if="formData.id">
         <guest-view :eventId="formData.id" :editAllowed="createdByMyUser"></guest-view>
         <assign-view :eventId="formData.id" :editAllowed="createdByMyUser" v-if="isAdmin()"></assign-view>
       </div>
+
       <div style="clear: both"></div>
       <div>
         <v-btn type="submit" class="text-none mb-4 right-btn" color="#2196F3">Speichern</v-btn>
@@ -208,6 +210,11 @@ export default {
     },
     async submitForm() {
       this.resetAlert();
+
+      const isFormValid = await this.$refs.form.validate();
+      console.log(JSON.stringify(isFormValid) + "*************")
+
+      if (isFormValid.valid) {
       try {
         let response;
         if (this.formData.id) {
@@ -238,6 +245,7 @@ export default {
         setTimeout(() => {
           this.showAlert = false;
         },2000);
+      }
       }
     },
     isAdmin() {

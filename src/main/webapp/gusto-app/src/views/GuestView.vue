@@ -80,14 +80,14 @@
           <v-btn class="text-none mb-4 right-btn" color="#2196F3" @click="addGuest()">Gast hinzufügen</v-btn>
           <v-dialog v-model="guestDialogVisible" max-width="500">
             <v-card>
-              <v-card-title>{{ guestData.id ? 'Gast bearbeiten': 'Gast hinzufügen'}}</v-card-title>
+              <v-card-title>{{ guestData.id ? 'Gast bearbeiten' : 'Gast hinzufügen' }}</v-card-title>
               <v-card-text>
-                <v-form @submit.prevent>
-                  <v-text-field type="text" id="firstName" v-model="guestData.firstName" required label="Vorname"></v-text-field>
-                  <v-text-field type="text" id="lastName" v-model="guestData.lastName" required label="Nachname"></v-text-field>
-                  <v-text-field type="number" id="additionalGuests" v-model="guestData.additionalGuests" required label="Anzahl Begleitung"></v-text-field>
-                  <v-text-field type="text" id="comment" v-model="guestData.comment" required label="Kommentar"></v-text-field>
-                  <v-text-field type="number" id="customPrice" v-model="guestData.customPrice" required label="Benutzerdefinierter Preis"></v-text-field>
+                <v-form @submit.prevent="saveGuest" ref="guestForm">
+                  <v-text-field type="text" id="firstName" v-model="guestData.firstName" :rules="[v => !!v || 'Bitte Vorname eingeben']" required label="Vorname"></v-text-field>
+                  <v-text-field type="text" id="lastName" v-model="guestData.lastName" :rules="[v => !!v || 'Bitte Nachname eingeben']" required label="Nachname"></v-text-field>
+                  <v-text-field type="number" id="additionalGuests" v-model="guestData.additionalGuests" :rules="[v => v === 0 || (!!v && v > 0) || 'Bitte eine gültige Anzahl an Begleitpersonen eingeben']" required label="Anzahl Begleitung"></v-text-field>
+                  <v-text-field type="text" id="comment" v-model="guestData.comment" :rules="[v => !!v || 'Bitte Kommentar eingeben']" required label="Kommentar"></v-text-field>
+                  <v-text-field type="number" id="customPrice" v-model="guestData.customPrice" :rules="[v => v === 0 || (!!v && v > 0) || 'Bitte einen gültigen Preis eingeben']" required label="Benutzerdefinierter Preis"></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -250,6 +250,10 @@ export default {
     async saveGuest() {
       console.log(this.guestData);
       this.resetAlert();
+
+      const isFormValid = await this.$refs.guestForm.validate();
+
+      if (isFormValid.valid) {
       try {
         let response;
         if (this.guestData.id) {
@@ -280,7 +284,7 @@ export default {
         setTimeout(() => {
           this.showAlert = false;
         },2000);
-      }
+      }}
     },
     async checkOutGuest(item) {
       const userConfirmed = window.confirm("Sind Sie sicher, dass Sie diesen Gast auschecken möchten?");
