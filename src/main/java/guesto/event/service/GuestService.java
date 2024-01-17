@@ -46,13 +46,16 @@ public class GuestService {
             if (guestToCheckIn.isPresent()) {
                 Guest guest = guestToCheckIn.get();
 
-                if (!guest.isCheckedIn()) {
-                    guest.setCheckedIn(true);
-                    event.incrementCheckedInGuests();
-                    eventRepository.update(event);
+                if (guest.isCheckedIn() && guest.getRemainingCheckIns() == 0) {
+                    guest.setRemainingCheckIns(guest.getAdditionalGuests() + 1);
+                    guest.setCheckedIn(false);
+                } else if (guest.getRemainingCheckIns() > 0) {
+                    guest.setRemainingCheckIns(guest.getRemainingCheckIns() - 1);
+                    guest.setCheckedIn(guest.getRemainingCheckIns() == 0);
                 }
 
                 guestListRepository.update(guestList);
+                eventRepository.update(event);
                 return convertToGuestResponseDTO(guest);
             }
             throw new GuestNotFoundException("Guest not found");
