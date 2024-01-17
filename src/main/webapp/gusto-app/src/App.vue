@@ -4,7 +4,7 @@
       <v-container>
         <v-row align="center" justify="space-between">
           <v-col>
-            <router-link to="/login" class="nav-link">Login</router-link>
+            <router-link to="/login" class="nav-link" v-if="!loggedIn">Login</router-link>
             <!--<router-link to="/register" class="nav-link">Register</router-link>-->
             <router-link to="/events" class="nav-link" v-if="loggedIn">Events</router-link>
             <router-link to="/users" class="nav-link" v-if="loggedIn">Benutzer</router-link>

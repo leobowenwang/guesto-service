@@ -173,8 +173,7 @@ export default {
       if (!userConfirmed) {
         return;
       }
-      this.deleteSuccess = false;
-      this.deleteFailed = false;
+      this.resetAlert();
       try {
         console.log("Löschen " + item.id);
         let response = await this.$axios.delete(BASE_URL + '/' + item.id, {
@@ -208,8 +207,7 @@ export default {
       };
     },
     async submitForm() {
-      this.success = false;
-      this.failed = false;
+      this.resetAlert();
       try {
         let response;
         if (this.formData.id) {
@@ -244,6 +242,12 @@ export default {
     },
     isAdmin() {
       return this.myRole === 'ADMIN';
+    },
+    resetAlert() {
+      this.success = false;
+      this.failed = false;
+      this.deleteSuccess = false;
+      this.deleteFailed = false;
     }
   },
   watch: {
