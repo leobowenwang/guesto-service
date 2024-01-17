@@ -10,10 +10,13 @@ public class LoginResponseDTO {
     private String username;
     private String token;
 
-    public LoginResponseDTO(Long id, String username, String token) {
+    private String role;
+
+    public LoginResponseDTO(Long id, String username, String token, String role) {
         this.id = id;
         this.username = username;
         this.token = token;
+        this.role = role;
     }
 
     public Long getId() {
@@ -38,5 +41,13 @@ public class LoginResponseDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -13,7 +13,6 @@
         </v-row>
       </v-container>
     </v-app-bar>
-
     <v-main>
       <v-container>
         <router-view/>

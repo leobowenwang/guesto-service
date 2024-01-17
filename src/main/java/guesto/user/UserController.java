@@ -42,7 +42,7 @@ public class UserController {
                 .map(guestoToken -> {
                     Long userId = guestoToken.getUserId();
                     String token = guestoToken.getToken();
-                    return HttpResponse.ok(new LoginResponseDTO(userId, loginDTO.getUsername(), token));
+                    return HttpResponse.ok(new LoginResponseDTO(userId, loginDTO.getUsername(), token, guestoToken.getRole()));
                 })
                 .orElseGet(HttpResponse::unauthorized);
     }
