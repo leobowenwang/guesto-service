@@ -42,9 +42,24 @@
     <v-btn class="text-none mb-4 create-btn" color="#2196F3" @click="createUser()">Erstellen</v-btn>
   </v-container>
   <v-container v-if="!!selectedUser">
-    <v-form @submit.prevent="submitForm">
-      <v-text-field type="text" id="username" v-model="formData.username" required label="Benutzername"></v-text-field>
-      <v-text-field v-if="!formData.id" type="password" id="password" v-model="formData.password" required label="Passwort"></v-text-field>
+    <v-form ref="form" @submit.prevent="submitForm">
+      <v-text-field
+          type="text"
+          id="username"
+          v-model="formData.username"
+          :rules="[v => !!v || 'Benutzername ist erforderlich']"
+      required
+      label="Benutzername" >
+      </v-text-field>
+      <v-text-field
+          v-if="!formData.id"
+          type="password"
+          id="password"
+          v-model="formData.password"
+          :rules="[v => !!v || 'Passwort ist erforderlich']"
+      required
+      label="Passwort"
+      ></v-text-field>
       <v-select
           v-model="formData.role"
           label="Rolle"
@@ -166,36 +181,44 @@ export default {
       console.log(this.formData);
       this.success = false;
       this.failed = false;
-      try {
-        let response;
-        if (this.formData.id) {
-          console.log("UMÄNDERN");
-          response = await this.$axios.put(BASE_URL + '/' + this.formData.id, this.formData, {
-            params: {},
-            headers: authHeader()
-          });
-        } else {
-          console.log("NEEEU");
-          response = await this.$axios.post(BASE_URL +'/register', this.formData, {
-            params: {},
-            headers: authHeader()
-          });
-        }
-        if (response) {
-          this.success = true;
+
+      const isFormValid = await this.$refs.form.validate(); // Hier wird die Validierung durchgeführt
+      console.log(JSON.stringify(isFormValid) + "*************")
+
+      if (isFormValid.valid) {
+        console.log('Request');
+
+        try {
+          let response;
+          if (this.formData.id) {
+            console.log("UMÄNDERN");
+            response = await this.$axios.put(BASE_URL + '/' + this.formData.id, this.formData, {
+              params: {},
+              headers: authHeader()
+            });
+          } else {
+            console.log("NEEEU");
+            response = await this.$axios.post(BASE_URL + '/register', this.formData, {
+              params: {},
+              headers: authHeader()
+            });
+          }
+          if (response) {
+            this.success = true;
+            this.showAlert = true;
+            setTimeout(() => {
+              this.showAlert = false;
+            }, 2000);
+            this.cancelForm();
+            this.fetchData();
+          }
+        } catch (error) {
+          this.failed = true;
           this.showAlert = true;
           setTimeout(() => {
             this.showAlert = false;
-          },2000);
-          this.cancelForm();
-          this.fetchData();
+          }, 2000);
         }
-      } catch (error) {
-        this.failed = true;
-        this.showAlert = true;
-        setTimeout(() => {
-          this.showAlert = false;
-        },2000);
       }
     },
   },
