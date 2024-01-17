@@ -1,4 +1,3 @@
-//todo felder required setzen - validierung
 //todo Gast hinzufügen button nur wenn das Event:
 //1) von mir ist weil ich Admin bin (check)
 //2)mir zugewiesen weil ich was anderes bin
