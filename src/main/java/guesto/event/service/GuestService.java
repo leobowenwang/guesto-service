@@ -123,17 +123,18 @@ public class GuestService {
 
     public boolean deleteGuestFromEvent(Long eventId, Long guestId) {
         return eventRepository.findById(eventId).map(event -> {
-            GuestList guestList = guestListRepository.findByEventId(event.getId()).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
+            GuestList guestList = guestListRepository.findByEventId(event.getId())
+                    .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
 
             boolean removed = guestList.getGuestList().removeIf(guest -> guest.getId().equals(guestId));
             if (removed) {
                 guestListRepository.update(guestList);
-                eventRepository.update(event);
             }
 
             return removed;
         }).orElse(false);
     }
+
 
 
     private void updateGuestFromDTO(Guest guest, GuestDTO guestDTO) {
