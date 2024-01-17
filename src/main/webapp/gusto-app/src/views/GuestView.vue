@@ -1,8 +1,6 @@
 //todo felder required setzen - validierung
-//todo update guest funktioniert nicht (backend)
-//todo delete guest funktioniert nicht (backend)
 //todo Gast hinzufügen button nur wenn das Event:
-//1) von mir ist weil ich Admin bin
+//1) von mir ist weil ich Admin bin (check)
 //2)mir zugewiesen weil ich was anderes bin
 <template>
   <v-alert v-if="success && showAlert" type="success">Speichern erfolgreich!</v-alert>
