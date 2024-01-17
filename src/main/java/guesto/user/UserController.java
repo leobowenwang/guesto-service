@@ -27,7 +27,7 @@ public class UserController {
     private UserService userService;
 
     @Get("/list")
-    @Secured({Role.ADMIN, Role.STAFF})
+    @Secured({Role.ADMIN, Role.STAFF, Role.CONTROLLER})
     @Operation(summary = "List All Users", description = "Lists all registered users.")
     public HttpResponse<List<UserDTO>> listUsers() {
         List<UserDTO> users = userService.listAllUsers();

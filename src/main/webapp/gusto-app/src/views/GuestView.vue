@@ -56,6 +56,7 @@
                 <td>{{ geCustomPriceDisplayText(item.customPrice)}}</td>
                 <td>{{ item.comment }}</td>
                 <td>{{ item.addedByDisplayText }}</td>
+                <td>{{ item.createdTimeFormatted }}</td>
                 <td>
                   <v-icon
                       size="small"
@@ -130,6 +131,7 @@ export default {
         { title: 'B.def. Preis', key: 'customPrice' },
         { title: 'Kommentar', key: 'comment' },
         { title: 'Hinzugefügt von', key: 'addedByDisplayText' },
+        { title: 'Erstellungsdatum', key: 'createdTimeFormatted' },
         { title: 'Aktionen', key: 'actions' },
       ],
       itemsPerPage: 5, // Anzahl der Elemente pro Seite
@@ -167,7 +169,10 @@ export default {
         headers: authHeader()
       }).then(response => {
             this.guests = response.data;
-            this.guests.forEach( o => o.addedByDisplayText = this.users.find( k => k.id === o.addedBy).username);
+            this.guests.forEach( o => {
+              o.addedByDisplayText = this.users.find( k => k.id === o.addedBy).username;
+              o.createdTimeFormatted = o.createdTime ? this.formatDate(o.createdTime) : '-';
+            });
             this.totalGuests = Number(response.headers['x-total-count']);
             this.guests.actions = '';
             this.loading = false;
@@ -176,6 +181,15 @@ export default {
             console.error('Error fetching data:', error);
             this.loading = false;
           });
+    },
+    formatDate(dateString) {
+      if (!dateString) {
+        return '';
+      }
+      const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+      let formattedDate = new Date(dateString).toLocaleDateString('de-DE', options);
+      formattedDate = formattedDate.replace(/[,]/g, ' ');
+      return formattedDate;
     },
     fetchUsers() {
       this.loading = true;

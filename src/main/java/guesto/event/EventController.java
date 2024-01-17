@@ -92,7 +92,7 @@ public class EventController {
     }
 
     @Get("/{eventId}/guest{?sortBy,order}")
-    @Secured({Role.ADMIN, Role.STAFF})
+    @Secured({Role.ADMIN, Role.STAFF, Role.CONTROLLER})
     @Operation(summary = "List All Guests", description = "Lists all guests for the specified event.")
     public HttpResponse<List<GuestResponseDTO>> listAllGuest(@PathVariable Long eventId, @Nullable @QueryValue String sortBy, @Nullable @QueryValue String order) {
         List<GuestResponseDTO> guests = guestService.listAllGuests(eventId, sortBy, "asc".equalsIgnoreCase(order));
