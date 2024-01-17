@@ -78,7 +78,7 @@
               </tr>
             </template>
           </v-data-table>
-          <v-btn class="text-none mb-4 right-btn" color="#48EDDD" @click="addGuest()">Gast hinzufügen</v-btn>
+          <v-btn class="text-none mb-4 right-btn" color="#2196F3" @click="addGuest()">Gast hinzufügen</v-btn>
           <v-dialog v-model="guestDialogVisible" max-width="500">
             <v-card>
               <v-card-title>{{ guestData.id ? 'Gast bearbeiten': 'Gast hinzufügen'}}</v-card-title>
@@ -92,8 +92,8 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn class="text-none mb-4" color="#ffc107" @click="closeDialog()">Abbrechen</v-btn>
-                <v-btn type="submit" class="text-none mb-4" color="#28a745" @click="saveGuest()">Speichern</v-btn>
+                <v-btn class="text-none mb-4" color="#757575" @click="closeDialog()">Abbrechen</v-btn>
+                <v-btn type="submit" class="text-none mb-4" color="#2196F3" @click="saveGuest()">Speichern</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
