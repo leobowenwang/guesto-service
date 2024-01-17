@@ -2,6 +2,7 @@ package guesto.event.service;
 
 import guesto.event.dto.EventDTO;
 import guesto.event.dto.EventResponseDTO;
+import guesto.event.exception.EntityExistsException;
 import guesto.event.exception.EventNotFoundException;
 import guesto.event.model.Event;
 import guesto.event.model.GuestList;
@@ -10,6 +11,7 @@ import guesto.event.repository.GuestListRepository;
 import guesto.user.model.User;
 import guesto.user.repository.UserRepository;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -95,19 +97,27 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
+    @Transactional
     public void assignUserToEvent(Long userId, Long eventId) {
         Optional<User> userOpt = userRepository.findById(userId);
         Optional<Event> eventOpt = eventRepository.findById(eventId);
 
         if (userOpt.isPresent() && eventOpt.isPresent()) {
             Event event = eventOpt.get();
-            event.assignUserId(userId);
+            Long existingUserId = userOpt.get().getId();
+
+            if (event.getAssignedUserIds().contains(existingUserId)) {
+                throw new EntityExistsException("User is already assigned to the event");
+            }
+
+            event.assignUserId(existingUserId);
             eventRepository.save(event);
         } else {
             throw new EventNotFoundException("User or Event not found");
         }
     }
 
+    @Transactional
     public void unassignUserFromEvent(Long userId, Long eventId) {
         Optional<User> userOpt = userRepository.findById(userId);
         Optional<Event> eventOpt = eventRepository.findById(eventId);

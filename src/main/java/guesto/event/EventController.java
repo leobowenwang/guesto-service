@@ -4,6 +4,7 @@ import guesto.event.dto.EventDTO;
 import guesto.event.dto.EventResponseDTO;
 import guesto.event.dto.GuestDTO;
 import guesto.event.dto.GuestResponseDTO;
+import guesto.user.dto.UserAssigmentDTO;
 import guesto.event.service.EventService;
 import guesto.event.service.GuestService;
 import guesto.user.model.Role;
@@ -55,14 +56,14 @@ public class EventController {
     }
 
     @Post("/{eventId}/assign")
-    public HttpResponse<?> assignUserToEvent(Long eventId, @Body Long userId) {
-        eventService.assignUserToEvent(userId, eventId);
+    public HttpResponse<?> assignUserToEvent(Long eventId, @Body UserAssigmentDTO userAssignment) {
+        eventService.assignUserToEvent(userAssignment.getUserId(), eventId);
         return HttpResponse.ok();
     }
 
     @Post("/{eventId}/unassign")
-    public HttpResponse<?> unassignUserFromEvent(Long eventId, @Body Long userId) {
-        eventService.unassignUserFromEvent(userId, eventId);
+    public HttpResponse<?> unassignUserFromEvent(Long eventId, @Body UserAssigmentDTO userAssignment) {
+        eventService.unassignUserFromEvent(userAssignment.getUserId(), eventId);
         return HttpResponse.ok();
     }
 
