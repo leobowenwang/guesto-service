@@ -25,12 +25,14 @@
                 size="small"
                 class="me-2"
                 @click="editEvent(item)"
+                color="rgb(72, 237, 221)"
             >
               mdi-pencil
             </v-icon>
             <v-icon
                 size="small"
                 @click="deleteItem(item)"
+                color="rgb(200, 35, 51)"
             >
               mdi-delete
             </v-icon>
@@ -49,6 +51,7 @@
       <v-text-field type="text" id="location" v-model="formData.location" required label="Location"></v-text-field>
       <div v-if="formData.id">
         <guest-view :eventId="formData.id"></guest-view>
+        <assign-view :eventId="formData.id"></assign-view>
       </div>
       <div style="clear: both"></div>
       <div>
@@ -61,6 +64,7 @@
 <script>
 import authHeader from '../auth/auth-header';
 import GuestView from "@/views/GuestView";
+import AssignView from "@/views/AssignView";
 const BASE_URL='http://localhost:8080/event';
 
 export default {
@@ -101,6 +105,7 @@ export default {
   },
   name: 'EventsPage',
   components: {
+    AssignView,
     GuestView
   },
   methods: {

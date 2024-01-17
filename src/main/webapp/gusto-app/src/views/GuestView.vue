@@ -1,7 +1,9 @@
 //todo felder required setzen - validierung
 //todo update guest funktioniert nicht (backend)
 //todo delete guest funktioniert nicht (backend)
-//todo Gast hinzufügen button nur wenn das Event von meinem User ist oder mir zugewiesen
+//todo Gast hinzufügen button nur wenn das Event:
+//1) von mir ist weil ich Admin bin
+//2)mir zugewiesen weil ich was anderes bin
 <template>
   <v-alert v-if="success && showAlert" type="success">Speichern erfolgreich!</v-alert>
   <v-alert v-if="failed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
@@ -42,10 +44,19 @@
                   >
                     mdi-checkbox-marked
                   </v-icon>
+                  <v-icon
+                      size="small"
+                      class="me-2"
+                      @click="checkOutGuest(item)"
+                      v-if="item.remainingCheckIns == 0"
+                      color="rgb(200, 35, 51)"
+                  >
+                    mdi-arrow-right-box
+                  </v-icon>
                   {{ item.remainingCheckIns }}
                 </td>
-                <td>{{ item.checkedIn }}</td>
-                <td>{{ item.customPrice }}</td>
+                <td>{{ getCheckedInDisplayText(item.checkedIn) }}</td>
+                <td>{{ geCustomPriceDisplayText(item.customPrice)}}</td>
                 <td>{{ item.comment }}</td>
                 <td>
                   <v-icon
@@ -117,7 +128,6 @@ export default {
       itemsPerPage: 5, // Anzahl der Elemente pro Seite
       totalGuests: 0,
       loading: false,
-      selectedGuest: false,
       success: false,
       failed: false,
       deleteSuccess: false,
@@ -201,6 +211,12 @@ export default {
       this.guestDialogVisible = true;
       this.guestData = {...this.guests.find(o => o.id === item.id)};
     },
+    getCheckedInDisplayText(text) {
+      return text === false ? 'Nein' : 'Ja';
+    },
+    geCustomPriceDisplayText(text) {
+      return text + "€";
+    },
     openDialog() {
       this.guestDialogVisible = true;
     },
@@ -249,6 +265,14 @@ export default {
           this.showAlert = false;
         },2000);
       }
+    },
+    async checkOutGuest(item) {
+      const userConfirmed = window.confirm("Sind Sie sicher, dass Sie diesen Gast auschecken möchten?");
+
+      if (!userConfirmed) {
+        return;
+      }
+      await this.checkInGuest(item);
     },
     async checkInGuest(item) {
       console.log(item);

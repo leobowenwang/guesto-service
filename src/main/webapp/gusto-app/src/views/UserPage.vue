@@ -24,12 +24,14 @@
                 size="small"
                 class="me-2"
                 @click="editUser(item)"
+                color="rgb(72, 237, 221)"
             >
               mdi-pencil
             </v-icon>
             <v-icon
                 size="small"
                 @click="deleteUser(item)"
+                color="rgb(200, 35, 51)"
             >
               mdi-delete
             </v-icon>
@@ -206,7 +208,7 @@ export default {
     this.roleOptions = [
       { value: 'ADMIN', label: 'Admin' },
       { value: 'STAFF', label: 'Mitarbeiter' },
-      { value: 'PROMOTER', label: 'Promoter' }
+      { value: 'CONTROLLER', label: 'Kontrolleur' }
     ];
     this.fetchData();
   },

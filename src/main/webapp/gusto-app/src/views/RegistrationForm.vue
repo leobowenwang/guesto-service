@@ -53,7 +53,7 @@ export default {
     this.roleOptions = [
       { value: 'ADMIN', label: 'Admin' },
       { value: 'STAFF', label: 'Mitarbeiter' },
-      { value: 'PROMOTER', label: 'Promoter' }
+      { value: 'CONTROLLER', label: 'Kontrolleur' }
     ];
   },
   name: 'RegistrationForm'
