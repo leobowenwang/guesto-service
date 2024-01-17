@@ -26,7 +26,8 @@ public class Event {
     private int checkedInGuestsCount;
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
     private GuestList guestList;
-    @ElementCollection
+
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "event_user_assignment", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "user_id")
     private List<Long> assignedUserIds;
