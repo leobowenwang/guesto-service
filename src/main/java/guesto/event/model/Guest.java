@@ -2,6 +2,8 @@ package guesto.event.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Guest {
 
@@ -16,6 +18,7 @@ public class Guest {
     private String comment;
     private int customPrice;
     private Long addedBy;
+    private LocalDateTime createdTime;
     @ManyToOne
     @JoinColumn(name = "guest_list_id")
     private GuestList guestList;
@@ -24,7 +27,7 @@ public class Guest {
     }
 
     public Guest(String firstName, String lastName, boolean isCheckedIn, GuestList guestList,
-                 int additionalGuests, String comment, int customPrice, int remainingCheckIns) {
+                 int additionalGuests, String comment, int customPrice, int remainingCheckIns, LocalDateTime createdTime) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isCheckedIn = isCheckedIn;
@@ -33,6 +36,7 @@ public class Guest {
         this.comment = comment;
         this.customPrice = customPrice;
         this.remainingCheckIns = remainingCheckIns;
+        this.createdTime = createdTime;
     }
 
     public Long getId() {
@@ -114,4 +118,13 @@ public class Guest {
     public void setAddedBy(Long addedBy) {
         this.addedBy = addedBy;
     }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
 }

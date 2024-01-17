@@ -16,6 +16,7 @@ import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -165,9 +166,10 @@ public class GuestService {
     }
 
     private Guest convertToEntity(GuestDTO guestDTO) {
-        return new Guest(guestDTO.firstName(), guestDTO.lastName(), false, null, guestDTO.getAdditionalGuests(), guestDTO.getComment(), guestDTO.getCustomPrice(), guestDTO.getAdditionalGuests() + 1);
+        return new Guest(guestDTO.firstName(), guestDTO.lastName(), false, null, guestDTO.getAdditionalGuests(),
+                guestDTO.getComment(), guestDTO.getCustomPrice(), guestDTO.getAdditionalGuests() + 1,
+                LocalDateTime.now());
     }
-
     private GuestResponseDTO convertToGuestResponseDTO(Guest guest) {
         GuestResponseDTO dto = new GuestResponseDTO();
         dto.setId(guest.getId());
@@ -179,6 +181,7 @@ public class GuestService {
         dto.setRemainingCheckIns(guest.getRemainingCheckIns());
         dto.setCheckedIn(guest.isCheckedIn());
         dto.setAddedBy(guest.getAddedBy());
+        dto.setCreatedTime(guest.getCreatedTime());
         return dto;
     }
 }

@@ -3,6 +3,8 @@ package guesto.event.dto;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
+import java.time.LocalDateTime;
+
 @Serdeable
 @Introspected
 public class GuestResponseDTO {
@@ -15,14 +17,13 @@ public class GuestResponseDTO {
     private boolean checkedIn;
     private int customPrice;
     private String comment;
-
     private Long addedBy;
+    private LocalDateTime createdTime;
 
     public GuestResponseDTO() {
     }
 
-    public GuestResponseDTO(Long id, Long guestId, String firstName, String lastName, int additionalGuests,
-                            int remainingCheckIns, boolean checkedIn, int customPrice, String comment, Long addedBy) {
+    public GuestResponseDTO(Long id, Long guestId, String firstName, String lastName, int additionalGuests, int remainingCheckIns, boolean checkedIn, int customPrice, String comment, Long addedBy, LocalDateTime createdTime) {
         this.id = id;
         this.guestId = guestId;
         this.firstName = firstName;
@@ -33,6 +34,7 @@ public class GuestResponseDTO {
         this.customPrice = customPrice;
         this.comment = comment;
         this.addedBy = addedBy;
+        this.createdTime = createdTime;
     }
 
     public Long getId() {
@@ -113,5 +115,13 @@ public class GuestResponseDTO {
 
     public void setAddedBy(Long addedBy) {
         this.addedBy = addedBy;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
     }
 }
