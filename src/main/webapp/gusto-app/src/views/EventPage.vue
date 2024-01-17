@@ -52,7 +52,7 @@
 
       <div v-if="formData.id">
         <guest-view :eventId="formData.id" :editAllowed="createdByMyUser"></guest-view>
-        <assign-view :eventId="formData.id" :editAllowed="createdByMyUser" v-if="isAdmin()"></assign-view>
+        <assign-view :eventId="formData.id" :editAllowed="createdByMyUser" v-if="isAdmin()" :assignedUserIds="assignedUserIds"></assign-view>
       </div>
 
       <div style="clear: both"></div>
@@ -109,6 +109,7 @@ export default {
       createdByMyUser: false,
       myId: null,
       myRole: null,
+      assignedUserIds: []
     }
   },
   name: 'EventsPage',
@@ -164,8 +165,10 @@ export default {
       this.selectedEvent = true;
       let event = this.events.find(o => o.id === item.id);
       this.formData = {...event};
-      console.log(event.createdBy);
       this.createdByMyUser = event.createdBy === this.myId;
+      if (event.assignedUserIds) {
+        this.assignedUserIds = event.assignedUserIds;
+      }
     },
     async deleteItem(item) {
       const userConfirmed = window.confirm("Sind Sie sicher, dass Sie dieses Event löschen möchten?");
@@ -175,7 +178,6 @@ export default {
       }
       this.resetAlert();
       try {
-        console.log("Löschen " + item.id);
         let response = await this.$axios.delete(BASE_URL + '/' + item.id, {
           params: {},
           headers: authHeader()
@@ -205,24 +207,21 @@ export default {
         price: 0,
         location: ''
       };
+      this.assignedUserIds = [];
     },
     async submitForm() {
       this.resetAlert();
 
       const isFormValid = await this.$refs.form.validate();
-      console.log(JSON.stringify(isFormValid) + "*************")
-
       if (isFormValid.valid) {
       try {
         let response;
         if (this.formData.id) {
-          console.log("UMÄNDERN");
           response = await this.$axios.put(BASE_URL + '/' + this.formData.id, this.formData, {
             params: {},
             headers: authHeader()
           });
         } else {
-          console.log("NEEEU");
           response = await this.$axios.post(BASE_URL, this.formData, {
             params: {},
             headers: authHeader()

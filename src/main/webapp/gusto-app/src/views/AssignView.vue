@@ -39,6 +39,14 @@ export default {
     eventId: {
       type: Number,
       required: true
+    },
+    editAllowed: {
+      type : Boolean,
+      required: true
+    },
+    assignedUserIds: {
+      type : Array,
+      required: true
     }
   },
   data() {
@@ -62,6 +70,7 @@ export default {
       }).then(response => {
             this.allUsers = response.data;
             this.allUsers.forEach(o => o.displayText = o.username + " (" + o.role + ")");
+            this.assignedUsers = this.allUsers.filter(user => this.assignedUserIds.includes(user.id));
             this.loading = false;
           })
           .catch(error => {
@@ -92,7 +101,6 @@ export default {
         }
       }
       if (errorCatchedForId) {
-        console.log("errorCatchedForId " + errorCatchedForId);
         this.failed = true;
         this.showAlert = true;
         setTimeout(() => {
@@ -113,7 +121,6 @@ export default {
     },
   },
   created() {
-    console.log(this.eventId);
     this.fetchData();
   },
 }

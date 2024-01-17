@@ -130,7 +130,6 @@ export default {
     },
     createUser() {
       this.selectedUser = true;
-      console.log(this.selectedUser);
     },
     editUser(item) {
       this.selectedUser = true;
@@ -148,7 +147,6 @@ export default {
       this.deleteSuccess = false;
       this.deleteFailed = false;
       try {
-        console.log("Löschen " + item.id);
         let response = await this.$axios.delete(BASE_URL + '/' + item.id, {
           params: {},
           headers: authHeader()
@@ -178,26 +176,19 @@ export default {
       };
     },
     async submitForm() {
-      console.log(this.formData);
       this.success = false;
       this.failed = false;
 
       const isFormValid = await this.$refs.form.validate(); // Hier wird die Validierung durchgeführt
-      console.log(JSON.stringify(isFormValid) + "*************")
-
       if (isFormValid.valid) {
-        console.log('Request');
-
         try {
           let response;
           if (this.formData.id) {
-            console.log("UMÄNDERN");
             response = await this.$axios.put(BASE_URL + '/' + this.formData.id, this.formData, {
               params: {},
               headers: authHeader()
             });
           } else {
-            console.log("NEEEU");
             response = await this.$axios.post(BASE_URL + '/register', this.formData, {
               params: {},
               headers: authHeader()

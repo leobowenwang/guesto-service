@@ -77,8 +77,6 @@ export default {
           setTimeout(() => {
             this.$router.push('/events');
           }, 1000);
-
-          console.log('Anmeldung erfolgreich:', response.data);
         }
       } catch (error) {
         this.loginFailed = true;
