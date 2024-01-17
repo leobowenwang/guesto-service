@@ -19,7 +19,7 @@
 </template>
 
 <script>
-
+//todo remove
 const BASE_URL='http://localhost:8080/user/register';
 
 export default {
