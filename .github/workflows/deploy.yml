@@ -1,10 +1,9 @@
 name: Deploy Vue.js App
 
 on:
-  workflow_run:
-    workflows: ["Java CI with Gradle"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 jobs:
   deploy_vue:
@@ -14,25 +13,25 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Debug GitHub Token
+        run: echo ${{ secrets.TOKEN }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '14'
 
-      - name: Show directory contents
-        run: ls -R
+      - name: Show current directory
+        run: pwd
 
-      - name: Change directory to Vue.js app
-        run: cd $GITHUB_WORKSPACE/src/main/webapp/gusto-app
-
-      - name: Install Vue.js dependencies
-        run: npm install
-
-      - name: Build Vue.js App
-        run: npm run build
+      - name: Install dependencies and build Vue.js App
+        run: |
+          cd $GITHUB_WORKSPACE/src/main/webapp/gusto-app
+          npm install
+          npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ github.token }}
-          publish_dir: ./dist
+          github_token: ${{ secrets.TOKEN }}
+          publish_dir: ./dist 
