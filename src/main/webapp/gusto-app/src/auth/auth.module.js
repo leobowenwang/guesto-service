@@ -12,6 +12,9 @@ export const auth = {
     setJWT(state, token) {
       localStorage.setItem('token', token);
       state.access_token = token;
+
+      localStorage.setItem('authState', JSON.stringify(state));
+
     },
     logout(state) {
       state.loggedIn = false;
@@ -19,14 +22,14 @@ export const auth = {
       state.role = null;
       state.access_token = null;
       state.id = null;
-      localStorage.setItem('token', null);
-      localStorage.setItem('loggedIn', false);
-      localStorage.setItem('username', null);
-      localStorage.setItem('role', null);
-      localStorage.setItem('id', null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('authState');
     },
-    getState() {
-      return this.state;
+    getState(state) {
+      const storedState = JSON.parse(localStorage.getItem('authState'));
+      if (storedState) {
+        Object.assign(state, storedState);
+      }
     }
   }
 };

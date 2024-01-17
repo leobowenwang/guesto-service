@@ -7,4 +7,5 @@ const store = createStore({
   }
 });
 
+store.commit('auth/getState');
 export default store;
