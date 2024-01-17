@@ -19,7 +19,7 @@
               chips
               label="Benutzer"
               multiple
-              item-title="username"
+              item-title="displayText"
               item-value="id"
           ></v-select>
           <div>
@@ -32,7 +32,7 @@
 </template>
 <script>
 import authHeader from '../auth/auth-header';
-const BASE_URL='http://localhost:8080';
+const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net' : 'http://localhost:8080';
 
 export default {
   props: {
@@ -61,6 +61,7 @@ export default {
         headers: authHeader()
       }).then(response => {
             this.allUsers = response.data;
+            this.allUsers.forEach(o => o.displayText = o.username + " (" + o.role + ")");
             this.loading = false;
           })
           .catch(error => {

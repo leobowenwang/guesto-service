@@ -102,8 +102,8 @@
 </template>
 <script>
 import authHeader from '../auth/auth-header';
-const BASE_URL='http://localhost:8080/event';
-const USER_URL='http://localhost:8080/user/list';
+const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/event' : 'http://localhost:8080/event';
+const USER_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/user/list' : 'http://localhost:8080/user/list';
 
 export default {
   props: {

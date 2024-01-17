@@ -74,8 +74,7 @@
 </template>
 <script>
 import authHeader from '../auth/auth-header';
-
-const BASE_URL='http://localhost:8080/user';
+const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/user' : 'http://localhost:8080/user';
 
 export default {
   data() {

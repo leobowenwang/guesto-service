@@ -68,7 +68,7 @@ import authHeader from '../auth/auth-header';
 import GuestView from "@/views/GuestView";
 import AssignView from "@/views/AssignView";
 import store from '../auth/store';
-const BASE_URL='http://localhost:8080/event';
+const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/event' : 'http://localhost:8080/event';
 
 export default {
   data() {

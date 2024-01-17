@@ -24,8 +24,7 @@
 
 <script>
 import store from '../auth/store';
-
-const BASE_URL = 'http://localhost:8080/user/login';
+const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/user/login' : 'http://localhost:8080/user/login';
 
 export default {
   data() {

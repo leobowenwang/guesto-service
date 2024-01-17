@@ -26,7 +26,7 @@ import { computed } from "vue";
 import store from './auth/store';
 import router from './router';
 
-const loggedIn = computed(() => store.state.auth.loggedIn);
+let loggedIn = computed(() => store.state.auth.loggedIn);
 
 function logout() {
   store.commit('auth/logout');
