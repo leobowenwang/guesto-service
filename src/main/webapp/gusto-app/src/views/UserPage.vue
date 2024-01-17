@@ -18,7 +18,7 @@
       <template v-slot:item="{ item }">
         <tr>
           <td>{{ item.username }}</td>
-          <td>{{ item.role }}</td>
+          <td>{{ getRoleDisplayText(item.role) }}</td>
           <td>
             <v-icon
                 size="small"
@@ -123,6 +123,9 @@ export default {
     editUser(item) {
       this.selectedUser = true;
       this.formData = {...this.users.find(o => o.id === item.id)};
+    },
+    getRoleDisplayText(text) {
+      return this.roleOptions.find( o => o.value === text).label;
     },
     async deleteUser(item) {
       const userConfirmed = window.confirm("Sind Sie sicher, dass Sie diesen User löschen möchten?");
