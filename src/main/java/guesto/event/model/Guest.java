@@ -15,7 +15,7 @@ public class Guest {
     private int remainingCheckIns;
     private String comment;
     private int customPrice;
-
+    private Long addedBy;
     @ManyToOne
     @JoinColumn(name = "guest_list_id")
     private GuestList guestList;
@@ -105,5 +105,13 @@ public class Guest {
 
     public void setGuestList(GuestList guestList) {
         this.guestList = guestList;
+    }
+
+    public Long getAddedBy() {
+        return addedBy;
+    }
+
+    public void setAddedBy(Long addedBy) {
+        this.addedBy = addedBy;
     }
 }

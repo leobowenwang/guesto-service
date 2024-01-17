@@ -9,11 +9,13 @@ import guesto.event.model.Guest;
 import guesto.event.model.GuestList;
 import guesto.event.repository.EventRepository;
 import guesto.event.repository.GuestListRepository;
+import guesto.user.model.User;
+import guesto.user.repository.UserRepository;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -25,11 +27,13 @@ public class GuestService {
 
     private final EventRepository eventRepository;
     private final GuestListRepository guestListRepository;
+    private final UserRepository userRepository;
 
     @Inject
-    public GuestService(EventRepository eventRepository, GuestListRepository guestListRepository) {
+    public GuestService(EventRepository eventRepository, GuestListRepository guestListRepository, UserRepository userRepository) {
         this.eventRepository = eventRepository;
         this.guestListRepository = guestListRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -58,16 +62,24 @@ public class GuestService {
     }
 
 
-    public GuestResponseDTO addGuestToEvent(Long eventId, GuestDTO guestDTO) {
+    public GuestResponseDTO addGuestToEvent(Long eventId, GuestDTO guestDTO, Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = user.getId();
         return eventRepository.findById(eventId).map(event -> {
             GuestList guestList = guestListRepository.findByEventId(event.getId()).orElseGet(() -> new GuestList(event));
-            List<Guest> guests = Optional.ofNullable(guestList.getGuestList()).orElseGet(ArrayList::new);
+
+            int totalGuestsAddedByUser = guestList.getGuestList().stream().filter(guest -> userId.equals(guest.getAddedBy())).mapToInt(guest -> guest.getAdditionalGuests() + 1).sum();
+
+            int additionalGuestsToAdd = guestDTO.getAdditionalGuests() + 1;
+
+            if (totalGuestsAddedByUser + additionalGuestsToAdd > event.getMaxGuestList()) {
+                throw new IllegalStateException("Adding this guest exceeds the maximum guest list limit for the user.");
+            }
 
             Guest guest = convertToEntity(guestDTO);
-            guests.add(guest);
+            guest.setAddedBy(userId);
             guest.setGuestList(guestList);
-            guestList.setGuests(guests);
-
+            guestList.getGuestList().add(guest);
             guestListRepository.update(guestList);
             eventRepository.update(event);
             return convertToGuestResponseDTO(guest);
@@ -102,13 +114,27 @@ public class GuestService {
     }
 
 
-    public GuestResponseDTO updateGuestInEvent(Long eventId, Long guestId, GuestDTO updatedGuestDTO) {
+    public GuestResponseDTO updateGuestInEvent(Long eventId, Long guestId, GuestDTO updatedGuestDTO, Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = user.getId();
+
         return eventRepository.findById(eventId).map(event -> {
             GuestList guestList = guestListRepository.findByEventId(event.getId()).orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
 
             Guest guestToUpdate = guestList.getGuestList().stream().filter(guest -> guest.getId().equals(guestId)).findFirst().orElseThrow(() -> new GuestNotFoundException("Guest not found with ID: " + guestId));
 
+            if (!userId.equals(guestToUpdate.getAddedBy())) {
+                throw new IllegalStateException("Only the user who added the guest can update the guest's information.");
+            }
+
+            int totalGuestsAddedByUser = guestList.getGuestList().stream().filter(guest -> userId.equals(guest.getAddedBy())).mapToInt(guest -> guest.getId().equals(guestId) ? updatedGuestDTO.getAdditionalGuests() + 1 : guest.getAdditionalGuests() + 1).sum();
+
+            if (totalGuestsAddedByUser > event.getMaxGuestList()) {
+                throw new IllegalStateException("Updating this guest exceeds the maximum guest list limit for the user.");
+            }
+
             updateGuestFromDTO(guestToUpdate, updatedGuestDTO);
+            guestToUpdate.setRemainingCheckIns(updatedGuestDTO.getAdditionalGuests() + 1);
 
             guestListRepository.update(guestList);
 

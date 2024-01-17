@@ -4,9 +4,9 @@ import guesto.event.dto.EventDTO;
 import guesto.event.dto.EventResponseDTO;
 import guesto.event.dto.GuestDTO;
 import guesto.event.dto.GuestResponseDTO;
-import guesto.user.dto.UserAssigmentDTO;
 import guesto.event.service.EventService;
 import guesto.event.service.GuestService;
+import guesto.user.dto.UserAssigmentDTO;
 import guesto.user.model.Role;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpResponse;
@@ -102,16 +102,16 @@ public class EventController {
     @Post("/{eventId}/guest")
     @Secured({Role.ADMIN, Role.STAFF})
     @Operation(summary = "Add Guest to Event", description = "Adds a guest to the specified event's guest list.")
-    public HttpResponse<GuestResponseDTO> addGuestToEvent(@PathVariable Long eventId, @Body GuestDTO guestDTO) {
-        GuestResponseDTO addedGuestDTO = guestService.addGuestToEvent(eventId, guestDTO);
+    public HttpResponse<GuestResponseDTO> addGuestToEvent(@PathVariable Long eventId, @Body GuestDTO guestDTO, Authentication authentication) {
+        GuestResponseDTO addedGuestDTO = guestService.addGuestToEvent(eventId, guestDTO, authentication);
         return HttpResponse.ok(addedGuestDTO);
     }
 
     @Put("/{eventId}/guest/{guestId}")
     @Secured({Role.ADMIN, Role.STAFF})
     @Operation(summary = "Update Guest in Event", description = "Updates a guest in the specified event's guest list.")
-    public HttpResponse<GuestResponseDTO> updateGuestInEvent(@PathVariable Long eventId, @PathVariable Long guestId, @Body GuestDTO updatedGuestDTO) {
-        GuestResponseDTO updatedGuest = guestService.updateGuestInEvent(eventId, guestId, updatedGuestDTO);
+    public HttpResponse<GuestResponseDTO> updateGuestInEvent(@PathVariable Long eventId, @PathVariable Long guestId, @Body GuestDTO updatedGuestDTO, Authentication authentication) {
+        GuestResponseDTO updatedGuest = guestService.updateGuestInEvent(eventId, guestId, updatedGuestDTO, authentication);
         return HttpResponse.ok(updatedGuest);
     }
 
