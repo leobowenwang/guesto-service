@@ -25,7 +25,7 @@
                 size="small"
                 class="me-2"
                 @click="editEvent(item)"
-                color="rgb(72, 237, 221)"
+                color="#2196F3"
             >
               mdi-pencil
             </v-icon>
@@ -40,7 +40,7 @@
         </tr>
       </template>
     </v-data-table>
-    <v-btn class="text-none mb-4 create-btn" color="#48EDDD" @click="createEvent()">Erstellen</v-btn>
+    <v-btn class="text-none mb-4 create-btn" color="#2196F3" @click="createEvent()">Erstellen</v-btn>
   </v-container>
   <v-container v-if="!!selectedEvent">
     <v-form @submit.prevent="submitForm">

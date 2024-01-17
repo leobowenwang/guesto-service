@@ -24,7 +24,7 @@
                 size="small"
                 class="me-2"
                 @click="editUser(item)"
-                color="rgb(72, 237, 221)"
+                color="#2196F3"
             >
               mdi-pencil
             </v-icon>
@@ -39,7 +39,7 @@
         </tr>
       </template>
     </v-data-table>
-    <v-btn class="text-none mb-4 create-btn" color="#48EDDD" @click="createUser()">Erstellen</v-btn>
+    <v-btn class="text-none mb-4 create-btn" color="#2196F3" @click="createUser()">Erstellen</v-btn>
   </v-container>
   <v-container v-if="!!selectedUser">
     <v-form @submit.prevent="submitForm">
