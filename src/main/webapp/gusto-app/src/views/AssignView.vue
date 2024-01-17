@@ -1,5 +1,4 @@
 //todo felder required setzen - validierung
-//todo Zurordnen nur wenn Rolle Admin
 <template>
   <v-alert v-if="success && showAlert" type="success">Speichern erfolgreich!</v-alert>
   <v-alert v-if="failed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
