@@ -64,7 +64,7 @@
                       size="small"
                       class="me-2"
                       @click="editGuest(item)"
-                      color="rgb(72, 237, 221)"
+                      color="#2196F3"
                   >
                     mdi-pencil
                   </v-icon>
