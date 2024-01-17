@@ -31,15 +31,13 @@
 1. **Datenbankkonfiguration:**
    - Die Micronaut-Anwendung ist so konfiguriert, dass sie auf eine PostgreSQL-Datenbank zugreift.
    - Die Verbindungsparameter (URL, Benutzername, Passwort) befinden sich in der Datei `application.yml` unter `datasources`.
-
-2. **Lokales Starten der Micronaut-Anwendung:**
-   - Stellen Sie sicher, dass die PostgreSQL-Datenbank erreichbar ist.
-   - Starten Sie die Micronaut-Anwendung lokal, z.B. über die Befehlszeile oder Ihre bevorzugte IDE.
-  
    - PostgreSQL-Datenbank mittels Intellij
+     
    -  ![image](https://github.com/leobowenwang/guesto-service/assets/82936664/128ff4b4-21c5-430b-ba31-3653942fbde1)
   
-   2. **Lokales Starten der Micronaut-Anwendung:**
+
+  
+2. **Lokales Starten der Micronaut-Anwendung:**
    - Stellen Sie sicher, dass die PostgreSQL-Datenbank erreichbar ist.
    - Starten Sie die Micronaut-Anwendung lokal, z.B. über die Befehlszeile oder Ihre bevorzugte IDE.
 
