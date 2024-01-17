@@ -87,6 +87,10 @@ tr:hover {
 }
 
 
-v-list-item-content span p,div{
+v-list-item-content span p{
+    padding-left: 20px;
+}
+
+v-list-item-content span div{
     padding-left: 20px;
 }

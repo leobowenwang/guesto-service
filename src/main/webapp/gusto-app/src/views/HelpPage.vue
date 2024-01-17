@@ -5,7 +5,7 @@
     <v-list>
       <v-list-item v-for="(item, index) in items" :key="index">
         <div>
-          <v-list-item-content>
+          <v-list-item-content class="help">
             <v-list-item-title>
               <v-icon>mdi-chevron-right</v-icon>
               <strong>
