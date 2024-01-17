@@ -1,14 +1,12 @@
 <template>
   <v-app>
-    <v-app-bar app color="#2196F3" dark>
+    <v-app-bar app color="#2196F3" dark v-if="loggedIn">
       <v-container>
         <v-row align="center" justify="space-between">
           <v-col>
-            <router-link to="/login" class="nav-link" v-if="!loggedIn">Login</router-link>
-            <!--<router-link to="/register" class="nav-link">Register</router-link>-->
-            <router-link to="/events" class="nav-link" v-if="loggedIn">Events</router-link>
-            <router-link to="/users" class="nav-link" v-if="loggedIn">Benutzer</router-link>
-            <button @click="logout" class="button button--primary button_navigation nav-link right-btn" v-if="loggedIn">Logout</button>
+            <router-link to="/events" class="nav-link">Events</router-link>
+            <router-link to="/users" class="nav-link" v-if="isAdmin">Benutzer</router-link>
+            <button @click="logout" class="button button--primary button_navigation nav-link right-btn">Logout</button>
           </v-col>
         </v-row>
       </v-container>
@@ -27,6 +25,7 @@ import store from './auth/store';
 import router from './router';
 
 let loggedIn = computed(() => store.state.auth.loggedIn);
+let isAdmin = computed(() => store.state.auth.role === 'ADMIN');
 
 function logout() {
   store.commit('auth/logout');
