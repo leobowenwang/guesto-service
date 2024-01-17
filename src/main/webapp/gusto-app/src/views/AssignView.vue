@@ -79,10 +79,18 @@ export default {
           });
     },
     async saveAssignedUsers() {
-      //todo zuerst alle reassignen
-      //dann nochmal für alle in der Liste assignen
-
-      console.log(this.assignedUsers);
+      for (let i = 0; i < this.assignedUserIds.length; i++) {
+        this.data = { 'userId' : this.assignedUserIds[i]}
+        try {
+          await this.$axios.post(BASE_URL + '/event/' + this.eventId + '/unassign', this.data, {
+            params: {},
+            headers: authHeader()
+          });
+        } catch (error) {
+          console.log(error);
+          errorCatchedForId = this.assignedUsers[i];
+        }
+      }
       this.success = false;
       this.failed = false;
       let errorCatchedForId = false;

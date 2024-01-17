@@ -62,6 +62,7 @@
                       class="me-2"
                       @click="editGuest(item)"
                       color="#2196F3"
+                      v-if="addedByMe(item)"
                   >
                     mdi-pencil
                   </v-icon>
@@ -69,6 +70,7 @@
                       size="small"
                       @click="deleteGuest(item)"
                       color="rgb(200, 35, 51)"
+                      v-if="addedByMe(item)"
                   >
                     mdi-delete
                   </v-icon>
@@ -76,7 +78,7 @@
               </tr>
             </template>
           </v-data-table>
-          <v-btn class="text-none mb-4 right-btn" color="#2196F3" @click="addGuest()">Gast hinzufügen</v-btn>
+          <v-btn class="text-none mb-4 right-btn" color="#2196F3" @click="addGuest()" v-if="editAllowed">Gast hinzufügen</v-btn>
           <v-dialog v-model="guestDialogVisible" max-width="500">
             <v-card>
               <v-card-title>{{ guestData.id ? 'Gast bearbeiten' : 'Gast hinzufügen' }}</v-card-title>
@@ -102,6 +104,7 @@
 </template>
 <script>
 import authHeader from '../auth/auth-header';
+import store from "@/auth/store";
 const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/event' : 'http://localhost:8080/event';
 const USER_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/user/list' : 'http://localhost:8080/user/list';
 
@@ -145,7 +148,9 @@ export default {
         comment: '',
         customPrice: 0
       },
-      users: []
+      users: [],
+      myId: null,
+      myRole: null,
     }
   },
   name: 'GuestView',
@@ -315,6 +320,9 @@ export default {
       this.failed = false;
       this.deleteSuccess = false;
       this.deleteFailed = false;
+    },
+    addedByMe(item) {
+      return item.addedBy === this.myId;
     }
   },
   watch: {
@@ -323,6 +331,8 @@ export default {
     },
   },
   created() {
+    this.myId = store.state.auth.id;
+    this.myRole = store.state.auth.role;
     this.fetchUsers();
     this.fetchData();
   },

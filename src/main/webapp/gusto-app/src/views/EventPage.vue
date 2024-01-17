@@ -33,6 +33,7 @@
                 size="small"
                 @click="deleteItem(item)"
                 color="rgb(200, 35, 51)"
+                v-if="isAdmin()"
             >
               mdi-delete
             </v-icon>
@@ -40,7 +41,7 @@
         </tr>
       </template>
     </v-data-table>
-    <v-btn class="text-none mb-4 create-btn" color="#2196F3" @click="createEvent()">Erstellen</v-btn>
+    <v-btn class="text-none mb-4 create-btn" color="#2196F3" @click="createEvent()" v-if="isAdmin()">Erstellen</v-btn>
   </v-container>
   <v-container v-if="!!selectedEvent">
     <v-form ref="form" @submit.prevent="submitForm">
@@ -51,13 +52,13 @@
       <v-text-field type="text" id="location" v-model="formData.location" :rules="[v => !!v || 'Bitte Location eingeben']" required label="Location"></v-text-field>
 
       <div v-if="formData.id">
-        <guest-view :eventId="formData.id" :editAllowed="createdByMyUser"></guest-view>
+        <guest-view :eventId="formData.id" :editAllowed="createdByMyUser || assignedToMyUser"></guest-view>
         <assign-view :eventId="formData.id" :editAllowed="createdByMyUser" v-if="isAdmin()" :assignedUserIds="assignedUserIds"></assign-view>
       </div>
 
       <div style="clear: both"></div>
       <div>
-        <v-btn type="submit" class="text-none mb-4 right-btn" color="#2196F3">Speichern</v-btn>
+        <v-btn type="submit" class="text-none mb-4 right-btn" color="#2196F3" v-if="isAdmin()">Speichern</v-btn>
         <v-btn class="text-none mb-4 left-btn" color="#757575" @click="cancelForm()">Abbrechen</v-btn>
       </div>
     </v-form>
@@ -107,6 +108,7 @@ export default {
         customPrice: 0
       },
       createdByMyUser: false,
+      assignedToMyUser: false,
       myId: null,
       myRole: null,
       assignedUserIds: []
@@ -168,6 +170,8 @@ export default {
       this.createdByMyUser = event.createdBy === this.myId;
       if (event.assignedUserIds) {
         this.assignedUserIds = event.assignedUserIds;
+        this.assignedToMyUser = event.assignedUserIds.includes(this.myId);
+        console.log(this.assignedToMyUser);
       }
     },
     async deleteItem(item) {
@@ -208,6 +212,7 @@ export default {
         location: ''
       };
       this.assignedUserIds = [];
+      this.fetchData();
     },
     async submitForm() {
       this.resetAlert();

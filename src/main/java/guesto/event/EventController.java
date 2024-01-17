@@ -92,7 +92,7 @@ public class EventController {
     }
 
     @Get("/{eventId}/guest{?sortBy,order}")
-    @Secured(Role.ADMIN)
+    @Secured({Role.ADMIN, Role.STAFF})
     @Operation(summary = "List All Guests", description = "Lists all guests for the specified event.")
     public HttpResponse<List<GuestResponseDTO>> listAllGuest(@PathVariable Long eventId, @Nullable @QueryValue String sortBy, @Nullable @QueryValue String order) {
         List<GuestResponseDTO> guests = guestService.listAllGuests(eventId, sortBy, "asc".equalsIgnoreCase(order));
@@ -116,7 +116,7 @@ public class EventController {
     }
 
     @Delete("/{eventId}/guest/{guestId}")
-    @Secured(Role.ADMIN)
+    @Secured({Role.ADMIN, Role.STAFF})
     @Operation(summary = "Delete Guest from Event", description = "Deletes a guest from the specified event's guest list.")
     public HttpResponse<?> deleteGuestFromEvent(@PathVariable Long eventId, @PathVariable Long guestId) {
         boolean removed = guestService.deleteGuestFromEvent(eventId, guestId);
