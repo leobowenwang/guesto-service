@@ -37,8 +37,7 @@ public class EventService {
     }
 
     public EventResponseDTO createEvent(EventDTO eventDTO, Authentication authentication) {
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
 
         Event event = new Event();
         populateEventFromDTO(event, eventDTO);
@@ -141,9 +140,11 @@ public class EventService {
     }
 
     private EventResponseDTO convertToEventResponseDTO(Event event) {
+
         EventResponseDTO dto = new EventResponseDTO(event.getId(), event.getEventName(), event.getEventTime(), event.getMaxGuestList(), event.getPrice(), event.getLocation(), event.getCreatedBy(), event.getCreatedTime());
         dto.setCheckedInGuestsCount(event.getCheckedInGuestsCount());
         dto.setTotalGuestCount(event.getTotalGuestCount());
+        dto.setAssignedUserIds(event.getAssignedUserIds());
         return dto;
     }
 

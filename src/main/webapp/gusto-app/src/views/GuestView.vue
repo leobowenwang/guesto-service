@@ -1,4 +1,3 @@
-//todo felder required setzen - validierung
 //todo Gast hinzufügen button nur wenn das Event:
 //1) von mir ist weil ich Admin bin (check)
 //2)mir zugewiesen weil ich was anderes bin
@@ -103,8 +102,8 @@
 </template>
 <script>
 import authHeader from '../auth/auth-header';
-const BASE_URL='http://localhost:8080/event';
-const USER_URL='http://localhost:8080/user/list';
+const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/event' : 'http://localhost:8080/event';
+const USER_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/user/list' : 'http://localhost:8080/user/list';
 
 export default {
   props: {
@@ -163,7 +162,6 @@ export default {
         headers: authHeader()
       }).then(response => {
             this.guests = response.data;
-            console.log(this.guests);
             this.guests.forEach( o => o.addedByDisplayText = this.users.find( k => k.id === o.addedBy).username);
             this.totalGuests = Number(response.headers['x-total-count']);
             this.guests.actions = '';
@@ -199,13 +197,11 @@ export default {
       }
       this.resetAlert();
       try {
-        console.log("Löschen " + item.id);
         let response = await this.$axios.delete(BASE_URL + '/' + this.eventId + '/guest/' + item.id, {
           params: {},
           headers: authHeader()
         });
         if (response) {
-          console.log("DELETED");
           this.deleteSuccess = true;
           this.showAlert = true;
           setTimeout(() => {
@@ -248,7 +244,6 @@ export default {
       };
     },
     async saveGuest() {
-      console.log(this.guestData);
       this.resetAlert();
 
       const isFormValid = await this.$refs.guestForm.validate();
@@ -257,13 +252,11 @@ export default {
       try {
         let response;
         if (this.guestData.id) {
-          console.log("UMÄNDERN");
           response = await this.$axios.put(BASE_URL + '/' + this.eventId + '/guest/' + this.guestData.id, this.guestData, {
             params: {},
             headers: authHeader()
           });
         } else {
-          console.log("NEEEU");
           response = await this.$axios.post(BASE_URL + '/' + this.eventId + '/guest', this.guestData, {
             params: {},
             headers: authHeader()
@@ -295,10 +288,8 @@ export default {
       await this.checkInGuest(item);
     },
     async checkInGuest(item) {
-      console.log(item);
       this.resetAlert();
       try {
-        console.log("UMÄNDERN");
         let response = await this.$axios.put(BASE_URL + '/' + this.eventId + '/check-in/' + item.id, {},{
             params: {},
             headers: authHeader()
@@ -332,7 +323,6 @@ export default {
     },
   },
   created() {
-    console.log(this.eventId);
     this.fetchUsers();
     this.fetchData();
   },

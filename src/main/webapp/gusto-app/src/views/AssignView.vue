@@ -1,4 +1,3 @@
-//todo felder required setzen - validierung
 <template>
   <v-alert v-if="success && showAlert" type="success">Speichern erfolgreich!</v-alert>
   <v-alert v-if="failed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
@@ -20,7 +19,7 @@
               chips
               label="Benutzer"
               multiple
-              item-title="username"
+              item-title="displayText"
               item-value="id"
           ></v-select>
           <div>
@@ -33,12 +32,20 @@
 </template>
 <script>
 import authHeader from '../auth/auth-header';
-const BASE_URL='http://localhost:8080';
+const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net' : 'http://localhost:8080';
 
 export default {
   props: {
     eventId: {
       type: Number,
+      required: true
+    },
+    editAllowed: {
+      type : Boolean,
+      required: true
+    },
+    assignedUserIds: {
+      type : Array,
       required: true
     }
   },
@@ -62,6 +69,8 @@ export default {
         headers: authHeader()
       }).then(response => {
             this.allUsers = response.data;
+            this.allUsers.forEach(o => o.displayText = o.username + " (" + o.role + ")");
+            this.assignedUsers = this.allUsers.filter(user => this.assignedUserIds.includes(user.id));
             this.loading = false;
           })
           .catch(error => {
@@ -92,7 +101,6 @@ export default {
         }
       }
       if (errorCatchedForId) {
-        console.log("errorCatchedForId " + errorCatchedForId);
         this.failed = true;
         this.showAlert = true;
         setTimeout(() => {
@@ -113,7 +121,6 @@ export default {
     },
   },
   created() {
-    console.log(this.eventId);
     this.fetchData();
   },
 }

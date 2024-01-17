@@ -5,6 +5,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Serdeable
 @Introspected
@@ -20,7 +21,7 @@ public class EventResponseDTO {
     private LocalDateTime createdTime;
     private int checkedInGuestsCount;
     private int totalGuestCount;
-
+    private List<Long> assignedUserIds;
     public EventResponseDTO() {
     }
 
@@ -113,5 +114,13 @@ public class EventResponseDTO {
 
     public void setTotalGuestCount(int totalGuestCount) {
         this.totalGuestCount = totalGuestCount;
+    }
+
+    public List<Long> getAssignedUserIds() {
+        return assignedUserIds;
+    }
+
+    public void setAssignedUserIds(List<Long> assignedUserIds) {
+        this.assignedUserIds = assignedUserIds;
     }
 }

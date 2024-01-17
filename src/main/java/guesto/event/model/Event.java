@@ -23,10 +23,10 @@ public class Event {
     private String location;
     private Long createdBy;
     private LocalDateTime createdTime;
-    private int checkedInGuestsCount;
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
     private GuestList guestList;
-    @ElementCollection
+
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "event_user_assignment", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "user_id")
     private List<Long> assignedUserIds;
@@ -101,18 +101,6 @@ public class Event {
         this.createdTime = createdTime;
     }
 
-    public int getCheckedInGuestsCount() {
-        return checkedInGuestsCount;
-    }
-
-    public void setCheckedInGuestsCount(int checkedInGuestsCount) {
-        this.checkedInGuestsCount = checkedInGuestsCount;
-    }
-
-    public void incrementCheckedInGuests() {
-        this.checkedInGuestsCount++;
-    }
-
     public GuestList getGuestList() {
         return guestList;
     }
@@ -144,6 +132,17 @@ public class Event {
     public void unassignUserId(Long userId) {
         this.assignedUserIds.remove(userId);
     }
+
+    public int getCheckedInGuestsCount() {
+        if (guestList == null || guestList.getGuestList() == null) {
+            return 0;
+        }
+
+        return guestList.getGuestList().stream()
+                .mapToInt(guest -> Math.max(guest.getAdditionalGuests() - guest.getRemainingCheckIns(), 0))
+                .sum();
+    }
+
 
     public int getTotalGuestCount() {
         if (guestList == null || guestList.getGuestList() == null) {
