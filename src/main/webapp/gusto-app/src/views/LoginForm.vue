@@ -72,6 +72,7 @@ export default {
           store.state.auth.loggedIn = true;
           store.state.auth.username = response.data.username;
           store.state.auth.role = response.data.role;
+          store.state.auth.id = response.data.id;
           store.commit('auth/setJWT', response.data.token);
 
           setTimeout(() => {

@@ -58,6 +58,7 @@
                 <td>{{ getCheckedInDisplayText(item.checkedIn) }}</td>
                 <td>{{ geCustomPriceDisplayText(item.customPrice)}}</td>
                 <td>{{ item.comment }}</td>
+                <td>{{ item.addedByDisplayText }}</td>
                 <td>
                   <v-icon
                       size="small"
@@ -105,11 +106,16 @@
 <script>
 import authHeader from '../auth/auth-header';
 const BASE_URL='http://localhost:8080/event';
+const USER_URL='http://localhost:8080/user/list';
 
 export default {
   props: {
     eventId: {
       type: Number,
+      required: true
+    },
+    editAllowed: {
+      type : Boolean,
       required: true
     }
   },
@@ -123,6 +129,7 @@ export default {
         { title: 'Eingecheckt', key: 'checkedIn' },
         { title: 'B.def. Preis', key: 'customPrice' },
         { title: 'Kommentar', key: 'comment' },
+        { title: 'Hinzugefügt von', key: 'addedByDisplayText' },
         { title: 'Aktionen', key: 'actions' },
       ],
       itemsPerPage: 5, // Anzahl der Elemente pro Seite
@@ -141,6 +148,7 @@ export default {
         comment: '',
         customPrice: 0
       },
+      users: []
     }
   },
   name: 'GuestView',
@@ -157,6 +165,8 @@ export default {
         headers: authHeader()
       }).then(response => {
             this.guests = response.data;
+            console.log(this.guests);
+            this.guests.forEach( o => o.addedByDisplayText = this.users.find( k => k.id === o.addedBy).username);
             this.totalGuests = Number(response.headers['x-total-count']);
             this.guests.actions = '';
             this.loading = false;
@@ -165,6 +175,19 @@ export default {
             console.error('Error fetching data:', error);
             this.loading = false;
           });
+    },
+    fetchUsers() {
+      this.loading = true;
+      this.$axios.get(USER_URL, {
+        params: {},
+        headers: authHeader()
+      }).then(response => {
+        this.users = response.data;
+        this.loading = false;
+      }).catch(error => {
+        console.error('Error fetching data:', error);
+        this.loading = false;
+      });
     },
     onPageChange(page) {
       this.$router.push({ query: { page } });
@@ -306,6 +329,7 @@ export default {
   },
   created() {
     console.log(this.eventId);
+    this.fetchUsers();
     this.fetchData();
   },
 }

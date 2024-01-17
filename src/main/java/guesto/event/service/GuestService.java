@@ -178,6 +178,7 @@ public class GuestService {
         dto.setCustomPrice(guest.getCustomPrice());
         dto.setRemainingCheckIns(guest.getRemainingCheckIns());
         dto.setCheckedIn(guest.isCheckedIn());
+        dto.setAddedBy(guest.getAddedBy());
         return dto;
     }
 }
