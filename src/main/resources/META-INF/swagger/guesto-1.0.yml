@@ -17,6 +17,17 @@ paths:
       summary: List Events
       description: Retrieves a list of all events.
       operationId: listEvents
+      parameters:
+      - name: sortBy
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: order
+        in: query
+        schema:
+          type: string
+          nullable: true
       responses:
         "200":
           description: listEvents 200 response
@@ -112,6 +123,31 @@ paths:
             application/json:
               schema:
                 type: object
+  /event/{eventId}/assign:
+    post:
+      tags:
+      - Events
+      operationId: assignUserToEvent
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAssigmentDTO'
+        required: true
+      responses:
+        "200":
+          description: assignUserToEvent 200 response
+          content:
+            application/json:
+              schema:
+                type: object
   /event/{eventId}/check-in/{guestId}:
     put:
       tags:
@@ -153,6 +189,16 @@ paths:
         schema:
           type: integer
           format: int64
+      - name: sortBy
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: order
+        in: query
+        schema:
+          type: string
+          nullable: true
       responses:
         "200":
           description: listAllGuest 200 response
@@ -247,6 +293,31 @@ paths:
             application/json:
               schema:
                 type: object
+  /event/{eventId}/unassign:
+    post:
+      tags:
+      - Events
+      operationId: unassignUserFromEvent
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAssigmentDTO'
+        required: true
+      responses:
+        "200":
+          description: unassignUserFromEvent 200 response
+          content:
+            application/json:
+              schema:
+                type: object
   /user/list:
     get:
       tags:
@@ -282,7 +353,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/LoginResponseDTO'
   /user/register:
     post:
       tags:
@@ -385,6 +456,18 @@ components:
           type: integer
         location:
           type: string
+        createdBy:
+          type: integer
+          format: int64
+        createdTime:
+          type: string
+          format: date-time
+        checkedInGuestsCount:
+          type: integer
+          format: int32
+        totalGuestCount:
+          type: integer
+          format: int32
     GuestDTO:
       required:
       - additionalGuests
@@ -439,6 +522,20 @@ components:
           type: string
         password:
           type: string
+    LoginResponseDTO:
+      required:
+      - id
+      - token
+      - username
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        token:
+          type: string
     RegisterDTO:
       type: object
       properties:
@@ -448,6 +545,12 @@ components:
           type: string
         role:
           type: string
+    UserAssigmentDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
     UserDTO:
       type: object
       properties:
