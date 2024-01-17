@@ -6,17 +6,19 @@ export const auth = {
     loggedIn: localStorage.getItem('loggedIn') != null ? localStorage.getItem('loggedIn') :  false,
     username: localStorage.getItem('username') != null ? localStorage.getItem('username') :  null,
     role: localStorage.getItem('role') != null ? localStorage.getItem('role') :  null,
+    id: localStorage.getItem('id') != null ? localStorage.getItem('id') :  null,
   },
   mutations: {
     setJWT(state, token) {
-      localStorage.setItem('token', token)
-      state.access_token = token
+      localStorage.setItem('token', token);
+      state.access_token = token;
     },
     logout(state) {
       state.loggedIn = false;
-      state.username = '';
-      state.role = '';
-      state.access_token = null
+      state.username = null;
+      state.role = null;
+      state.access_token = null;
+      state.id = null;
       localStorage.setItem('token', null);
     }
   }

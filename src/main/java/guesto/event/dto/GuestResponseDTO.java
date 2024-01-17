@@ -16,11 +16,13 @@ public class GuestResponseDTO {
     private int customPrice;
     private String comment;
 
+    private Long addedBy;
+
     public GuestResponseDTO() {
     }
 
     public GuestResponseDTO(Long id, Long guestId, String firstName, String lastName, int additionalGuests,
-                            int remainingCheckIns, boolean checkedIn, int customPrice, String comment) {
+                            int remainingCheckIns, boolean checkedIn, int customPrice, String comment, Long addedBy) {
         this.id = id;
         this.guestId = guestId;
         this.firstName = firstName;
@@ -30,6 +32,7 @@ public class GuestResponseDTO {
         this.checkedIn = checkedIn;
         this.customPrice = customPrice;
         this.comment = comment;
+        this.addedBy = addedBy;
     }
 
     public Long getId() {
@@ -102,5 +105,13 @@ public class GuestResponseDTO {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Long getAddedBy() {
+        return addedBy;
+    }
+
+    public void setAddedBy(Long addedBy) {
+        this.addedBy = addedBy;
     }
 }

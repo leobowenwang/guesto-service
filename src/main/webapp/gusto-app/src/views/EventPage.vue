@@ -52,8 +52,8 @@
       <v-text-field type="number" id="price" v-model="formData.price" required label="Preis"></v-text-field>
       <v-text-field type="text" id="location" v-model="formData.location" required label="Location"></v-text-field>
       <div v-if="formData.id">
-        <guest-view :eventId="formData.id"></guest-view>
-        <assign-view :eventId="formData.id"></assign-view>
+        <guest-view :eventId="formData.id" :editAllowed="createdByMyUser"></guest-view>
+        <assign-view :eventId="formData.id" :editAllowed="createdByMyUser"></assign-view>
       </div>
       <div style="clear: both"></div>
       <div>
@@ -106,6 +106,8 @@ export default {
         comment: '',
         customPrice: 0
       },
+      createdByMyUser: false,
+      myId: null,
     }
   },
   name: 'EventsPage',
@@ -159,7 +161,10 @@ export default {
     },
     editEvent(item) {
       this.selectedEvent = true;
-      this.formData = {...this.events.find(o => o.id === item.id)};
+      let event = this.events.find(o => o.id === item.id);
+      this.formData = {...event};
+      console.log(event.createdBy);
+      this.createdByMyUser = event.createdBy === this.myId;
     },
     async deleteItem(item) {
       const userConfirmed = window.confirm("Sind Sie sicher, dass Sie dieses Event löschen möchten?");
@@ -244,6 +249,7 @@ export default {
   },
   created() {
     console.log(store.state.auth);
+    this.myId = store.state.auth.id;
     this.fetchData();
   },
 }
