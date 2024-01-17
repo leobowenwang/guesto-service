@@ -53,7 +53,7 @@
       <v-text-field type="text" id="location" v-model="formData.location" required label="Location"></v-text-field>
       <div v-if="formData.id">
         <guest-view :eventId="formData.id" :editAllowed="createdByMyUser"></guest-view>
-        <assign-view :eventId="formData.id" :editAllowed="createdByMyUser"></assign-view>
+        <assign-view :eventId="formData.id" :editAllowed="createdByMyUser" v-if="isAdmin()"></assign-view>
       </div>
       <div style="clear: both"></div>
       <div>
@@ -108,6 +108,7 @@ export default {
       },
       createdByMyUser: false,
       myId: null,
+      myRole: null,
     }
   },
   name: 'EventsPage',
@@ -241,6 +242,9 @@ export default {
         },2000);
       }
     },
+    isAdmin() {
+      return this.myRole === 'ADMIN';
+    }
   },
   watch: {
     '$route.query.page'() {
@@ -250,6 +254,7 @@ export default {
   created() {
     console.log(store.state.auth);
     this.myId = store.state.auth.id;
+    this.myRole = store.state.auth.role;
     this.fetchData();
   },
 }
