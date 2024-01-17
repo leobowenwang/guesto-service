@@ -3,7 +3,7 @@ export const auth = {
 
   state: {
     access_token: localStorage.getItem('token') != null ? localStorage.getItem('token') :  null,
-    loggedIn: localStorage.getItem('loggedIn') != null ? localStorage.getItem('loggedIn') :  false,
+    loggedIn: false,
     username: localStorage.getItem('username') != null ? localStorage.getItem('username') :  null,
     role: localStorage.getItem('role') != null ? localStorage.getItem('role') :  null,
     id: localStorage.getItem('id') != null ? localStorage.getItem('id') :  null,
@@ -20,6 +20,13 @@ export const auth = {
       state.access_token = null;
       state.id = null;
       localStorage.setItem('token', null);
+      localStorage.setItem('loggedIn', false);
+      localStorage.setItem('username', null);
+      localStorage.setItem('role', null);
+      localStorage.setItem('id', null);
+    },
+    getState() {
+      return this.state;
     }
   }
 };

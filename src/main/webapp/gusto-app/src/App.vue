@@ -20,14 +20,16 @@
     </v-main>
   </v-app>
 </template>
+
 <script setup>
-import { computed } from "vue"
+import { computed } from "vue";
 import store from './auth/store';
-import router from './router'
-const loggedIn = computed(() => store.state.auth.loggedIn)
+import router from './router';
+
+const loggedIn = computed(() => store.state.auth.loggedIn);
+
 function logout() {
   store.commit('auth/logout');
   router.push('/login');
 }
 </script>
-

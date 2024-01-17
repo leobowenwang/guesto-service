@@ -5,6 +5,7 @@ import EventPage from '../views/EventPage'
 import UserPage from "@/views/UserPage";
 
 const routes = [
+  { path: '/', redirect: '/login' },
   { path: '/register', component: RegistrationForm },
   { path: '/login', component: LoginForm },
   { path: '/events', component: EventPage },
