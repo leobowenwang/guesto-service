@@ -24,7 +24,7 @@
               item-value="id"
           ></v-select>
           <div>
-            <v-btn class="text-none mb-4 right-btn" color="#28a745" @click="saveAssignedUsers()">Speichern</v-btn>
+            <v-btn class="text-none mb-4 right-btn" color="#2196F3" @click="saveAssignedUsers()">Speichern</v-btn>
           </div>
         </v-container>
       </v-expansion-panel-text>

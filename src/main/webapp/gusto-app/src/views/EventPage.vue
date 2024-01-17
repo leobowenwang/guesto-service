@@ -57,8 +57,8 @@
       </div>
       <div style="clear: both"></div>
       <div>
-        <v-btn type="submit" class="text-none mb-4 right-btn" color="#28a745">Speichern</v-btn>
-        <v-btn class="text-none mb-4 left-btn" color="#ffc107" @click="cancelForm()">Abbrechen</v-btn>
+        <v-btn type="submit" class="text-none mb-4 right-btn" color="#2196F3">Speichern</v-btn>
+        <v-btn class="text-none mb-4 left-btn" color="#757575" @click="cancelForm()">Abbrechen</v-btn>
       </div>
     </v-form>
   </v-container>
