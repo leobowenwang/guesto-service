@@ -3,30 +3,24 @@ name: Deploy Vue.js App
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
-  deploy_vue:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Debug GitHub Token
-        run: echo ${{ secrets.TOKEN }}
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
-          node-version: '14'
-
-      - name: Show current directory
-        run: pwd
+          node-version: 14
 
       - name: Install dependencies and build Vue.js App
         run: |
-          cd $GITHUB_WORKSPACE/src/main/webapp/gusto-app
+          cd ./src/main/webapp/gusto-app
           npm install
           npm run build
 
@@ -34,4 +28,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.TOKEN }}
-          publish_dir: ./dist 
+          publish_dir: ./src/main/webapp/gusto-app/dist
