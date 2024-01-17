@@ -20,6 +20,8 @@
           <td>{{ item.eventName }}</td>
           <td>{{ item.eventTimeDisplay }}</td>
           <td>{{ item.location }}</td>
+          <td>{{ item.checkedInGuestsCount }}</td>
+          <td>{{ item.totalGuestCount }}</td>
           <td>
             <v-icon
                 size="small"
@@ -65,6 +67,7 @@
 import authHeader from '../auth/auth-header';
 import GuestView from "@/views/GuestView";
 import AssignView from "@/views/AssignView";
+import store from '../auth/store';
 const BASE_URL='http://localhost:8080/event';
 
 export default {
@@ -75,6 +78,8 @@ export default {
         { title: 'Event Name', value: 'eventName' },
         { title: 'Event Time', value: 'eventTime' },
         { title: 'Location', value: 'location' },
+        { title: 'Anzahl eingecheckte Gäste', value: 'checkedInGuestsCount' },
+        { title: 'Anzahl Gäste', value: 'totalGuestCount' },
         { title: 'Aktionen', key: 'actions' },
       ],
       itemsPerPage: 5, // Anzahl der Elemente pro Seite
@@ -115,6 +120,8 @@ export default {
         params: {
           _page: this.$route.query.page || 1,
           _limit: this.itemsPerPage,
+          sortBy: 'eventName',
+          order: 'asc'
         },
         headers: authHeader()
       }).then(response => {
@@ -236,6 +243,7 @@ export default {
     },
   },
   created() {
+    console.log(store.state.auth);
     this.fetchData();
   },
 }

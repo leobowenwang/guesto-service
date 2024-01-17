@@ -32,7 +32,7 @@ public class UserService {
             claims.put("userId", user.getId());
             claims.put("roles", Collections.singletonList(user.getRole()));
 
-            return jwtTokenGenerator.generateToken(claims).map(token -> new GuestoToken(token, user.getId()));
+            return jwtTokenGenerator.generateToken(claims).map(token -> new GuestoToken(token, user.getId(), user.getRole()));
         });
     }
 

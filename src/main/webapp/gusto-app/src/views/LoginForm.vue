@@ -70,6 +70,8 @@ export default {
 
         if (response.status === 200) {
           store.state.auth.loggedIn = true;
+          store.state.auth.username = response.data.username;
+          store.state.auth.role = response.data.role;
           store.commit('auth/setJWT', response.data.token);
 
           setTimeout(() => {
