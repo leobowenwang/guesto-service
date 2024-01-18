@@ -58,6 +58,14 @@
                   <v-icon
                       size="small"
                       class="me-2"
+                      @click="scanGuest(item)"
+                      color="rgb(200, 35, 51)"
+                  >
+                    mdi-qrcode-scan
+                  </v-icon>
+                  <v-icon
+                      size="small"
+                      class="me-2"
                       @click="editGuest(item)"
                       color="#2196F3"
                       v-if="addedByMe(item) || isAdmin"
@@ -72,7 +80,8 @@
                   >
                     mdi-delete
                   </v-icon>
-                </td>              </tr>
+                </td>
+              </tr>
             </template>
           </v-data-table>
           <v-btn class="text-none mb-4 right-btn" color="#2196F3" @click="addGuest()" v-if="editAllowed">Gast hinzufügen</v-btn>
@@ -228,6 +237,9 @@ export default {
       this.$router.push({ query: { page } });
       this.fetchData();
     },
+    scanGuest() {
+      this.$router.push("/scan");
+    },
     async deleteGuest(item) {
       const userConfirmed = window.confirm("Sind Sie sicher, dass Sie diesen Gast löschen möchten?");
 
@@ -286,9 +298,7 @@ export default {
     },
     async saveGuest() {
       this.resetAlert();
-
       const isFormValid = await this.$refs.guestForm.validate();
-
       if (isFormValid.valid) {
         try {
           let response;

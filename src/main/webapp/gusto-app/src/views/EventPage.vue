@@ -120,6 +120,11 @@ export default {
     GuestView
   },
   methods: {
+    checkForScanResult() {
+      if (this.$route.query.text) {
+        console.log('Received text from Scan:', this.$route.query.text);
+      }
+    },
     fetchData() {
       this.loading = true;
       this.$axios.get(BASE_URL, {
@@ -266,6 +271,7 @@ export default {
     },
   },
   created() {
+    this.checkForScanResult();
     console.log(store.state.auth);
     this.myId = store.state.auth.id;
     this.myRole = store.state.auth.role;

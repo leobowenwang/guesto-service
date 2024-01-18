@@ -1,17 +1,28 @@
 <template>
+  <v-alert v-if="success && showAlert" type="success">Check-in erfolgreich!</v-alert>
+  <v-alert v-if="failed && showAlert" type="error">Check-in fehlgeschlagen!</v-alert>
+  <v-alert v-if="notValid && showAlert" type="error">Check-in ungültig!</v-alert>
   <v-container>
     <h1>QR Code Scan</h1>
     <div>
-      <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>
+      <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded" v-if="showScanner"></StreamBarcodeReader>
+      <v-btn @click="cancel()">Abbrechen</v-btn>
     </div>
   </v-container>
 </template>
 <script>
 import { StreamBarcodeReader } from "vue-barcode-reader";
+import authHeader from '../auth/auth-header';
+const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net' : 'http://localhost:8080';
 export default {
   data() {
     return {
-      link: null
+      link: null,
+      success: false,
+      failed: false,
+      showAlert: false,
+      notValid: false,
+      showScanner: true
     }
   },
   name: 'QrCodeScanPage',
@@ -21,15 +32,51 @@ export default {
   methods: {
     onDecode(text) {
       console.log(`Decode text from QR code is ${text}`)
+      this.resetAlert();
       if (text.startsWith('/event')) {
-        this.$router.push(text);
+        this.checkInGuest(text);
+        this.showScanner = false;
       } else {
-        console.log("nope");
+        this.notValid = true;
+        this.showAlert = true;
+        this.showScanner = false;
+        setTimeout(() => {
+          this.showAlert = false;
+        },1000);
       }
-
+    },
+    cancel() {
+      this.$router.push({ path: '/events'});
     },
     onLoaded() {
-      console.log(`Ready to start scanning barcodes`)
+      console.log(`Ready to start scanning barcodes`);
+    },
+    async checkInGuest(qrCodeText) {
+      this.resetAlert();
+      try {
+        let response = await this.$axios.put(BASE_URL + qrCodeText, {},{
+          params: {},
+          headers: authHeader()
+        });
+        if (response) {
+          this.success = true;
+          this.showAlert = true;
+          setTimeout(() => {
+            this.showAlert = false;
+          },1000);
+          this.fetchData();
+        }
+      } catch (error) {
+        this.failed = true;
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        },1000);
+      }
+    },
+    resetAlert() {
+      this.success = false;
+      this.failed = false;
     },
   },
   watch: {
