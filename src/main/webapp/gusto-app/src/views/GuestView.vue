@@ -179,7 +179,6 @@ export default {
     VueQrcode,
   },
   methods: {
-
     fetchData() {
       this.loading = true;
       this.$axios.get(BASE_URL + '/' + this.eventId + '/guest', {

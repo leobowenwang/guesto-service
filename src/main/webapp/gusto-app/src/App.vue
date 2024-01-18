@@ -7,6 +7,7 @@
             <router-link to="/events" class="nav-link">Events</router-link>
             <router-link to="/users" class="nav-link" v-if="isAdmin">Benutzer</router-link>
             <router-link to="/help" class="nav-link">Hilfe</router-link>
+            <router-link to="/scan" class="nav-link">Scan</router-link>
             <button @click="logout" class="button button--primary button_navigation nav-link right-btn">Logout ({{ username }}) </button>
           </v-col>
         </v-row>

@@ -4,6 +4,7 @@ import EventPage from '../views/EventPage'
 import UserPage from "@/views/UserPage";
 import store from '../auth/store';
 import HelpPage from "@/views/HelpPage";
+import QrCodeScanPage from "@/views/QrCodeScanPage";
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -19,6 +20,7 @@ const routes = [
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   { path: '/help', component: HelpPage },
+  { path: '/scan', component: QrCodeScanPage },
 ]
 
 const router = createRouter({
