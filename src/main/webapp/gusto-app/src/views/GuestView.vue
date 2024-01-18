@@ -1,6 +1,3 @@
-//todo Gast hinzufügen button nur wenn das Event:
-//1) von mir ist weil ich Admin bin (check)
-//2)mir zugewiesen weil ich was anderes bin
 <template>
   <v-alert v-if="success && showAlert" type="success">Speichern erfolgreich!</v-alert>
   <v-alert v-if="failed && showAlert" type="error">Speichern fehlgeschlagen!</v-alert>
@@ -75,8 +72,7 @@
                   >
                     mdi-delete
                   </v-icon>
-                </td>
-              </tr>
+                </td>              </tr>
             </template>
           </v-data-table>
           <v-btn class="text-none mb-4 right-btn" color="#2196F3" @click="addGuest()" v-if="editAllowed">Gast hinzufügen</v-btn>
@@ -90,6 +86,20 @@
                   <v-text-field type="number" id="additionalGuests" v-model="guestData.additionalGuests" :rules="[v => v === 0 || (!!v && v > 0) || 'Bitte eine gültige Anzahl an Begleitpersonen eingeben']" required label="Anzahl Begleitung"></v-text-field>
                   <v-text-field type="text" id="comment" v-model="guestData.comment" :rules="[v => !!v || 'Bitte Kommentar eingeben']" required label="Kommentar"></v-text-field>
                   <v-text-field type="number" id="customPrice" v-model="guestData.customPrice" :rules="[v => v === 0 || (!!v && v > 0) || 'Bitte einen gültigen Preis eingeben']" required label="Benutzerdefinierter Preis"></v-text-field>
+                  <v-text-field
+                      type="text"
+                      id="qrcode"
+                      v-model="guestData.qrcode"
+                      label="QR-Code"
+                      readonly
+                      hide-details
+                  ></v-text-field>
+                  <vue-qrcode
+                      :value="guestData.qrcode"
+                      level="H"
+                      :size="150"
+                      style="margin-top: 10px;"
+                  ></vue-qrcode>
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -103,7 +113,9 @@
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
+
 <script>
+import VueQrcode from '@chenfengyuan/vue-qrcode';
 import authHeader from '../auth/auth-header';
 import store from "@/auth/store";
 const BASE_URL= process.env.NODE_ENV === 'production' ? 'https://guesto.azurewebsites.net/event' : 'http://localhost:8080/event';
@@ -134,7 +146,7 @@ export default {
         { title: 'Erstellungsdatum', key: 'createdTimeFormatted' },
         { title: 'Aktionen', key: 'actions' },
       ],
-      itemsPerPage: 5, // Anzahl der Elemente pro Seite
+      itemsPerPage: 5,
       totalGuests: 0,
       loading: false,
       success: false,
@@ -148,17 +160,19 @@ export default {
         lastName: '',
         additionalGuests: 0,
         comment: '',
-        customPrice: 0
+        customPrice: 0,
+        qrcode: 'https://google.at',
       },
       users: [],
       myId: null,
       myRole: null,
     }
   },
-  name: 'GuestView',
   components: {
+    VueQrcode,
   },
   methods: {
+
     fetchData() {
       this.loading = true;
       this.$axios.get(BASE_URL + '/' + this.eventId + '/guest', {
@@ -168,15 +182,15 @@ export default {
         },
         headers: authHeader()
       }).then(response => {
-            this.guests = response.data;
-            this.guests.forEach( o => {
-              o.addedByDisplayText = this.users.find( k => k.id === o.addedBy).username;
-              o.createdTimeFormatted = o.createdTime ? this.formatDate(o.createdTime) : '-';
-            });
-            this.totalGuests = Number(response.headers['x-total-count']);
-            this.guests.actions = '';
-            this.loading = false;
-          })
+        this.guests = response.data;
+        this.guests.forEach( o => {
+          o.addedByDisplayText = this.users.find( k => k.id === o.addedBy).username;
+          o.createdTimeFormatted = o.createdTime ? this.formatDate(o.createdTime) : '-';
+        });
+        this.totalGuests = Number(response.headers['x-total-count']);
+        this.guests.actions = '';
+        this.loading = false;
+      })
           .catch(error => {
             console.error('Error fetching data:', error);
             this.loading = false;
@@ -268,36 +282,41 @@ export default {
       const isFormValid = await this.$refs.guestForm.validate();
 
       if (isFormValid.valid) {
-      try {
-        let response;
-        if (this.guestData.id) {
-          response = await this.$axios.put(BASE_URL + '/' + this.eventId + '/guest/' + this.guestData.id, this.guestData, {
-            params: {},
-            headers: authHeader()
-          });
-        } else {
-          response = await this.$axios.post(BASE_URL + '/' + this.eventId + '/guest', this.guestData, {
-            params: {},
-            headers: authHeader()
-          });
-        }
-        if (response) {
-          this.success = true;
+        try {
+          let response;
+          if (this.guestData.id) {
+            response = await this.$axios.put(BASE_URL + '/' + this.eventId + '/guest/' + this.guestData.id, this.guestData, {
+              params: {},
+              headers: authHeader()
+            });
+          } else {
+            // Hier wird der QR-Code-Link mit dem Check-in-Endpunkt generiert
+            this.guestData.qrcode = BASE_URL + '/' + this.eventId + '/check-in/' + this.guestData.id;
+
+            response = await this.$axios.post(BASE_URL + '/' + this.eventId + '/guest', this.guestData, {
+              params: {},
+              headers: authHeader()
+            });
+          }
+          if (response) {
+            this.success = true;
+            this.showAlert = true;
+            setTimeout(() => {
+              this.showAlert = false;
+            },2000);
+            this.closeDialog();
+            this.fetchData();
+          }
+        } catch (error) {
+          this.failed = true;
           this.showAlert = true;
           setTimeout(() => {
             this.showAlert = false;
           },2000);
-          this.closeDialog();
-          this.fetchData();
         }
-      } catch (error) {
-        this.failed = true;
-        this.showAlert = true;
-        setTimeout(() => {
-          this.showAlert = false;
-        },2000);
-      }}
+      }
     },
+
     async checkOutGuest(item) {
       const userConfirmed = window.confirm("Sind Sie sicher, dass Sie diesen Gast auschecken möchten?");
 
@@ -310,9 +329,9 @@ export default {
       this.resetAlert();
       try {
         let response = await this.$axios.put(BASE_URL + '/' + this.eventId + '/check-in/' + item.id, {},{
-            params: {},
-            headers: authHeader()
-          });
+          params: {},
+          headers: authHeader()
+        });
         if (response) {
           this.success = true;
           this.showAlert = true;
