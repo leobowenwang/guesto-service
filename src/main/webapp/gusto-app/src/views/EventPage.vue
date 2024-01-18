@@ -42,6 +42,7 @@
       </template>
     </v-data-table>
     <v-btn class="text-none mb-4 create-btn" color="#2196F3" @click="createEvent()" v-if="isAdmin()">Erstellen</v-btn>
+    <v-btn class="text-none mb-4 create-btn left-btn" color="#2196F3" @click="scanGuest()" v-if="isAdmin()">QR-Code Scannen</v-btn>
   </v-container>
   <v-container v-if="!!selectedEvent">
     <v-form ref="form" @submit.prevent="submitForm">
@@ -168,6 +169,9 @@ export default {
     createEvent() {
       this.selectedEvent = true;
     },
+    scanGuest() {
+      this.$router.push("/scan");
+    },
     editEvent(item) {
       this.selectedEvent = true;
       let event = this.events.find(o => o.id === item.id);
@@ -272,7 +276,6 @@ export default {
   },
   created() {
     this.checkForScanResult();
-    console.log(store.state.auth);
     this.myId = store.state.auth.id;
     this.myRole = store.state.auth.role;
     this.fetchData();

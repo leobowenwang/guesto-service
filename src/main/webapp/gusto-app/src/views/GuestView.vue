@@ -58,14 +58,6 @@
                   <v-icon
                       size="small"
                       class="me-2"
-                      @click="scanGuest(item)"
-                      color="rgb(200, 35, 51)"
-                  >
-                    mdi-qrcode-scan
-                  </v-icon>
-                  <v-icon
-                      size="small"
-                      class="me-2"
                       @click="editGuest(item)"
                       color="#2196F3"
                       v-if="addedByMe(item) || isAdmin"
@@ -237,9 +229,6 @@ export default {
       this.$router.push({ query: { page } });
       this.fetchData();
     },
-    scanGuest() {
-      this.$router.push("/scan");
-    },
     async deleteGuest(item) {
       const userConfirmed = window.confirm("Sind Sie sicher, dass Sie diesen Gast löschen möchten?");
 
@@ -308,9 +297,7 @@ export default {
               headers: authHeader()
             });
           } else {
-            // Hier wird der QR-Code-Link mit dem Check-in-Endpunkt generiert
             this.guestData.qrcode = BASE_URL + '/' + this.eventId + '/check-in/' + this.guestData.id;
-
             response = await this.$axios.post(BASE_URL + '/' + this.eventId + '/guest', this.guestData, {
               params: {},
               headers: authHeader()

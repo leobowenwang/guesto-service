@@ -6,7 +6,7 @@
     <h1>QR Code Scan</h1>
     <div>
       <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded" v-if="showScanner"></StreamBarcodeReader>
-      <v-btn @click="cancel()">Abbrechen</v-btn>
+      <v-btn class="text-none mb-4 create-btn left-btn" color="#2196F3" @click="cancel()">Abbrechen</v-btn>
     </div>
   </v-container>
 </template>
@@ -34,9 +34,11 @@ export default {
       console.log(`Decode text from QR code is ${text}`)
       this.resetAlert();
       if (text.startsWith('/event')) {
+        console.log("valid");
         this.checkInGuest(text);
         this.showScanner = false;
       } else {
+        console.log("not valid");
         this.notValid = true;
         this.showAlert = true;
         this.showScanner = false;
@@ -48,9 +50,6 @@ export default {
     cancel() {
       this.$router.push({ path: '/events'});
     },
-    onLoaded() {
-      console.log(`Ready to start scanning barcodes`);
-    },
     async checkInGuest(qrCodeText) {
       this.resetAlert();
       try {
@@ -59,19 +58,22 @@ export default {
           headers: authHeader()
         });
         if (response) {
+          console.log("success");
           this.success = true;
           this.showAlert = true;
           setTimeout(() => {
             this.showAlert = false;
-          },1000);
-          this.fetchData();
+            this.cancel();
+          },500);
         }
       } catch (error) {
+        console.log("failed");
         this.failed = true;
         this.showAlert = true;
         setTimeout(() => {
           this.showAlert = false;
-        },1000);
+          this.cancel();
+        },500);
       }
     },
     resetAlert() {
@@ -82,6 +84,7 @@ export default {
   watch: {
   },
   created() {
+    this.showScanner = true;
   },
 }
 </script>
