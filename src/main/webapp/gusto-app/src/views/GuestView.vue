@@ -258,7 +258,7 @@ export default {
     editGuest(item) {
       this.guestDialogVisible = true;
       this.guestData = {...this.guests.find(o => o.id === item.id)};
-      this.guestData.qrcode = BASE_URL + '/' + this.eventId + '/check-in/' + this.guestData.id;
+      this.guestData.qrcode = BASE_URL + '/' + this.eventId + '/guest/' + this.guestData.id;
     },
     getCheckedInDisplayText(text) {
       return text === false ? 'Nein' : 'Ja';
