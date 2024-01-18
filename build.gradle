@@ -54,6 +54,15 @@ micronaut {
 tasks.withType(JavaCompile) {
     options.fork = true
     options.forkOptions.jvmArgs << '-Dmicronaut.openapi.views.spec=rapidoc.enabled=false,openapi-explorer.enabled=true,swagger-ui.enabled=true'
+    doLast {
+        copy {
+            from "$buildDir/classes/java/main/META-INF/swagger"
+            into "$projectDir/src/main/resources/META-INF/swagger"
+            rename { String fileName ->
+                fileName.replace('guesto-0.1.yml', 'guesto-1.0.yml')
+            }
+        }
+    }
 }
 
 jar {

@@ -468,6 +468,11 @@ components:
         totalGuestCount:
           type: integer
           format: int32
+        assignedUserIds:
+          type: array
+          items:
+            type: integer
+            format: int64
     GuestDTO:
       required:
       - additionalGuests
@@ -515,6 +520,12 @@ components:
           format: int32
         comment:
           type: string
+        addedBy:
+          type: integer
+          format: int64
+        createdTime:
+          type: string
+          format: date-time
     LoginDTO:
       type: object
       properties:
@@ -525,6 +536,7 @@ components:
     LoginResponseDTO:
       required:
       - id
+      - role
       - token
       - username
       type: object
@@ -535,6 +547,8 @@ components:
         username:
           type: string
         token:
+          type: string
+        role:
           type: string
     RegisterDTO:
       type: object
