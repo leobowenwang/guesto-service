@@ -24,6 +24,9 @@ jobs:
           npm install
           npm run build
 
+      - name: Copy PDF file to build directory
+        run: cp ./src/main/webapp/gusto-app/public/files/benutzerdok.pdf ./src/main/webapp/gusto-app/dist
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
