@@ -38,6 +38,10 @@
 3. **Deployment durchführen:**
    - Das Deployment kann gestartet werden, indem man auf "Deploy" klickt. Der Backend-Code wird kompiliert und auf Azure hochgeladen.
    - Der Status des Deployments kann in Visual Studio Code überwacht werden, und man kann das bereitgestellte Backend testen, um sicherzustellen, dass es funktioniert.
+  
+4. **API Dokumentation - Swagger:**
+   - https://guesto.azurewebsites.net/swagger-ui/index.html#/
+
 
 ## Lokales Setup:
 
