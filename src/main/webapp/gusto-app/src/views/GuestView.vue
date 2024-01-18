@@ -60,7 +60,7 @@
                       class="me-2"
                       @click="editGuest(item)"
                       color="#2196F3"
-                      v-if="addedByMe(item) || isAdmin"
+                      v-if="addedByMe(item)"
                   >
                     mdi-pencil
                   </v-icon>
@@ -107,7 +107,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn class="text-none mb-4" color="#757575" @click="closeDialog()">Abbrechen</v-btn>
-                <v-btn type="submit" class="text-none mb-4" color="#2196F3" @click="saveGuest()">Speichern</v-btn>
+                <v-btn type="submit" class="text-none mb-4" color="#2196F3" @click="saveGuest()"  v-if="saveGuestAllowed">Speichern</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -173,6 +173,7 @@ export default {
       users: [],
       myId: null,
       myRole: null,
+      saveGuestAllowed: true
     }
   },
   components: {
@@ -260,6 +261,7 @@ export default {
       this.openDialog();
     },
     editGuest(item) {
+      this.saveGuestAllowed = item.addedBy === this.myId;
       this.guestDialogVisible = true;
       this.guestData = {...this.guests.find(o => o.id === item.id)};
       this.guestData.qrcode = '/event/' + this.eventId + '/check-in/' + this.guestData.id;
