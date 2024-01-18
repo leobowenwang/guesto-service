@@ -180,7 +180,6 @@ export default {
       if (event.assignedUserIds) {
         this.assignedUserIds = event.assignedUserIds;
         this.assignedToMyUser = event.assignedUserIds.includes(this.myId);
-        console.log(this.assignedToMyUser);
       }
     },
     async deleteItem(item) {
