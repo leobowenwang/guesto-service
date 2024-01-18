@@ -54,7 +54,7 @@
 export default {
   data() {
     return {
-      pdfUrl:'/files/Benutzerdokumentation.pdf',
+      pdfUrl: process.env.NODE_ENV === 'production' ? '/guesto-service/files/Benutzerdokumentation.pdf' : '/files/Benutzerdokumentation.pdf',
       items: ['Registrierung:', 'Benutzerübersicht:', 'Benutzer bearbeiten:', 'Benutzer löschen:', 'Hinweise für den Administrator:', 'Hinweis:']
     }
   },
