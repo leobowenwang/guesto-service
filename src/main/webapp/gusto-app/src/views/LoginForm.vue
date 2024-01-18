@@ -76,7 +76,7 @@ export default {
 
           setTimeout(() => {
             this.$router.push('/events');
-          }, 1000);
+          }, 500);
         }
       } catch (error) {
         this.loginFailed = true;

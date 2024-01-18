@@ -52,7 +52,7 @@
       <v-text-field type="text" id="location" v-model="formData.location" :rules="[v => !!v || 'Bitte Location eingeben']" required label="Location"></v-text-field>
 
       <div v-if="formData.id">
-        <guest-view :eventId="formData.id" :editAllowed="createdByMyUser || assignedToMyUser"></guest-view>
+        <guest-view :eventId="formData.id" :editAllowed="createdByMyUser || assignedToMyUser" :isAdmin="isAdmin()"></guest-view>
         <assign-view :eventId="formData.id" :editAllowed="createdByMyUser" v-if="isAdmin()" :assignedUserIds="assignedUserIds"></assign-view>
       </div>
 

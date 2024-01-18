@@ -40,28 +40,8 @@
               <p> - Überprüfen Sie regelmäßig die Benutzerliste, um sicherzustellen, dass alle Informationen aktuell sind. </p>
             </span>
             <span v-if="index === 5">
-              <div>
-                - Benutzer erstellen:
-                <p> - Navigieren Sie zur Benutzerseite.</p>
-                <p> - Klicken Sie auf "Erstellen".</p>
-                <p> - Geben Sie Benutzername, Passwort und Rolle ein.</p>
-                <p> - Klicken Sie auf "Erstellen".</p>
-              </div>
-              <div>
-                - Benutzer bearbeiten:
-                <p> - Wählen Sie den zu bearbeitenden Benutzer aus.</p>
-                <p> - Ändern Sie Benutzername oder Rolle nach Bedarf.</p>
-                <p> - Klicken Sie auf "Speichern", um die Änderungen zu bestätigen.</p>
-              </div>
-              <div>
-                - Benutzer löschen:
-                <p> - Wählen Sie den zu löschenden Benutzer aus.</p>
-                <p> - Klicken Sie auf "Löschen" und bestätigen Sie die Aktion.</p>
-              </div>
-            </span>
-            <span v-if="index === 6">
               <p> - Die Rolle gibt an, welche Rechte der Benutzer hat. Achten Sie darauf, die Rollen entsprechend den Aufgaben zuzuweisen. </p>
-              <p> eine genauere Beschreibung finden Sie in <a :href="pdfUrl" download="Benutzerdokumentation.pdf">Benutzerdokumentation.pdf</a></p>
+              <p> - Eine genauere Beschreibung finden Sie in <a :href="pdfUrl" download="Benutzerdokumentation.pdf">Benutzerdokumentation.pdf</a></p>
             </span>
           </v-list-item-content>
         </div>
@@ -75,7 +55,7 @@ export default {
   data() {
     return {
       pdfUrl:'/files/Benutzerdokumentation.pdf',
-      items: ['Registrierung:', 'Benutzerübersicht:', 'Benutzer bearbeiten:', 'Benutzer löschen:', 'Hinweise für den Administrator:', 'How to:', 'Hinweis:']
+      items: ['Registrierung:', 'Benutzerübersicht:', 'Benutzer bearbeiten:', 'Benutzer löschen:', 'Hinweise für den Administrator:', 'Hinweis:']
     }
   },
   name: 'HelpPage',
