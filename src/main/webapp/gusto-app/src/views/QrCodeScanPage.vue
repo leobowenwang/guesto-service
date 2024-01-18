@@ -8,8 +8,6 @@
 </template>
 <script>
 import { StreamBarcodeReader } from "vue-barcode-reader";
-const BASE_URL_PROD= 'https://guesto.azurewebsites.net/';
-const BASE_URL_LOCAL='http://localhost:8080/';
 export default {
   data() {
     return {
@@ -23,7 +21,7 @@ export default {
   methods: {
     onDecode(text) {
       console.log(`Decode text from QR code is ${text}`)
-      if (text.startsWith(BASE_URL_PROD || BASE_URL_LOCAL)) {
+      if (text.startsWith('/event')) {
         this.$router.push(text);
       } else {
         console.log("nope");

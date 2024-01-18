@@ -8,7 +8,7 @@
             <router-link to="/users" class="nav-link" v-if="isAdmin">Benutzer</router-link>
             <router-link to="/help" class="nav-link">Hilfe</router-link>
             <router-link to="/scan" class="nav-link">Scan</router-link>
-            <button @click="logout" class="button button--primary button_navigation nav-link right-btn">Logout ({{ username }}) </button>
+            <button @click="logout" class="button button--primary button_navigation nav-link right-btn">Logout</button>
           </v-col>
         </v-row>
       </v-container>
@@ -28,7 +28,6 @@ import router from './router';
 
 let loggedIn = computed(() => store.state.auth.loggedIn);
 let isAdmin = computed(() => store.state.auth.role === 'ADMIN');
-let username = computed(() => store.state.auth.username);
 
 function logout() {
   store.commit('auth/logout');
