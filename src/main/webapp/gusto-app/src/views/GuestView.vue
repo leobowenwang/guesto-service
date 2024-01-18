@@ -86,20 +86,22 @@
                   <v-text-field type="number" id="additionalGuests" v-model="guestData.additionalGuests" :rules="[v => v === 0 || (!!v && v > 0) || 'Bitte eine gültige Anzahl an Begleitpersonen eingeben']" required label="Anzahl Begleitung"></v-text-field>
                   <v-text-field type="text" id="comment" v-model="guestData.comment" :rules="[v => !!v || 'Bitte Kommentar eingeben']" required label="Kommentar"></v-text-field>
                   <v-text-field type="number" id="customPrice" v-model="guestData.customPrice" :rules="[v => v === 0 || (!!v && v > 0) || 'Bitte einen gültigen Preis eingeben']" required label="Benutzerdefinierter Preis"></v-text-field>
-                  <v-text-field
-                      type="text"
-                      id="qrcode"
-                      v-model="guestData.qrcode"
-                      label="QR-Code"
-                      readonly
-                      hide-details
-                  ></v-text-field>
-                  <vue-qrcode
-                      :value="guestData.qrcode"
-                      level="H"
-                      :size="150"
-                      style="margin-top: 10px;"
-                  ></vue-qrcode>
+                  <div v-if="guestData.id">
+                    <v-text-field
+                        type="text"
+                        id="qrcode"
+                        v-model="guestData.qrcode"
+                        label="QR-Code"
+                        readonly
+                        hide-details
+                    ></v-text-field>
+                    <vue-qrcode
+                        :value="guestData.qrcode"
+                        level="H"
+                        :size="150"
+                        style="margin-top: 10px;"
+                    ></vue-qrcode>
+                  </div>
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -161,7 +163,7 @@ export default {
         additionalGuests: 0,
         comment: '',
         customPrice: 0,
-        qrcode: 'https://google.at',
+        qrcode: "google.at"
       },
       users: [],
       myId: null,
@@ -256,6 +258,7 @@ export default {
     editGuest(item) {
       this.guestDialogVisible = true;
       this.guestData = {...this.guests.find(o => o.id === item.id)};
+      this.guestData.qrcode = BASE_URL + '/' + this.eventId + '/check-in/' + this.guestData.id;
     },
     getCheckedInDisplayText(text) {
       return text === false ? 'Nein' : 'Ja';
