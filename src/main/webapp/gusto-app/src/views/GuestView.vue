@@ -60,7 +60,7 @@
                       class="me-2"
                       @click="editGuest(item)"
                       color="#2196F3"
-                      v-if="addedByMe(item)"
+                      v-if="addedByMe(item) || isAdmin"
                   >
                     mdi-pencil
                   </v-icon>
@@ -68,7 +68,7 @@
                       size="small"
                       @click="deleteGuest(item)"
                       color="rgb(200, 35, 51)"
-                      v-if="addedByMe(item)"
+                      v-if="addedByMe(item) || isAdmin"
                   >
                     mdi-delete
                   </v-icon>
