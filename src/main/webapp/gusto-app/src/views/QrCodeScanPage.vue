@@ -24,7 +24,7 @@ export default {
     onDecode(text) {
       console.log(`Decode text from QR code is ${text}`)
       if (text.startsWith(BASE_URL_PROD || BASE_URL_LOCAL)) {
-        window.open(text, "_blank");
+        this.$router.push(text);
       } else {
         console.log("nope");
       }
